@@ -7,6 +7,8 @@ rl.on('line', (line) => {
   process.stdout.write(JSON.stringify({ chunk: "Hello " }) + "\n");
   setTimeout(() => {
     process.stdout.write(JSON.stringify({ chunk: "world!" }) + "\n");
-    process.stdout.write(JSON.stringify({ done: true }) + "\n");
   }, 500);
+  setTimeout(() => {
+    process.stdout.write(JSON.stringify({ done: true }) + "\n");
+  }, 1000);
 });
