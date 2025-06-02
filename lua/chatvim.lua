@@ -1,8 +1,8 @@
 local M = {}
 
-function M.complete_markdown()
+function M.complete_text()
 	local bufnr = vim.api.nvim_get_current_buf()
-if not vim.bo[bufnr].modifiable then
+	if not vim.bo[bufnr].modifiable then
 		vim.api.nvim_echo({ { "No file open to complete.", "WarningMsg" } }, false, {})
 		return
 	end
@@ -41,7 +41,7 @@ if not vim.bo[bufnr].modifiable then
 end
 
 vim.api.nvim_create_user_command("ChatVimComplete", function()
-	require("chatvim").complete_markdown()
+	require("chatvim").complete_text()
 end, {})
 
 return M
