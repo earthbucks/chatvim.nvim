@@ -73,6 +73,20 @@ export const aiApiXAI = new OpenAI({
   baseURL: "https://api.x.ai/v1",
 });
 
+export async function generateChatCompletionStream({
+  messages,
+}: {
+  messages: { role: "assistant" | "user" | "system"; content: string }[];
+}) {
+  const stream = await aiApiXAI.chat.completions.create({
+    model: "grok-3-beta",
+    messages,
+    max_tokens: undefined,
+    stream: true,
+  });
+  return stream;
+}
+
 const rl = readline.createInterface({ input: process.stdin });
 
 rl.on("line", (line: string) => {
