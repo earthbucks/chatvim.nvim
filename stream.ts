@@ -28,6 +28,10 @@ rl.on("line", (line: string) => {
     return;
   }
   const { text } = params;
+
+  // now, to get settings, the markdown input may have toml or yaml front matter. toml is preferred. toml starts with '+++' and yaml starts with '---'.
+  // TODO: implement parsing of front matter
+
   const settings = SettingsSchema.parse({ delimiter: "===" });
   const delimiter = settings.delimiter;
   process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
@@ -37,14 +41,4 @@ rl.on("line", (line: string) => {
     process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
     process.stdout.write(`${JSON.stringify({ done: true })}\n`);
   }, 500);
-
-  // Simulate streaming
-  // if (req.method === "complete") {
-  //   // Simulate streaming a completion
-  //   process.stdout.write(`${JSON.stringify({ chunk: "## AI Completion\n" })}\n`);
-  //   setTimeout(() => {
-  //     process.stdout.write(`${JSON.stringify({ chunk: "This is a streamed response." })}\n`);
-  //     process.stdout.write(`${JSON.stringify({ done: true })}\n`);
-  //   }, 500);
-  // }
 });
