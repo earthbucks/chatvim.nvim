@@ -60,7 +60,9 @@ rl.on("line", (line: string) => {
   }
   const { text } = params;
 
-  // now, to get settings, the markdown input may have toml or yaml front matter. toml is preferred. toml starts with '+++' and yaml starts with '---'.
+  // now, to get settings, the markdown input may have toml or yaml front
+  // matter. toml is preferred. toml starts with '+++' and yaml starts with
+  // '---'.
   // TODO: implement parsing of front matter
 
   const settings = SettingsSchema.parse({ delimiter: "===" });
