@@ -1,7 +1,7 @@
-const readline = require('readline');
+import * as readline from 'readline';
 
 const rl = readline.createInterface({ input: process.stdin });
-rl.on('line', (line) => {
+rl.on('line', (line: string) => {
   const req = JSON.parse(line);
   // Simulate streaming
   if (req.method === "complete") {
