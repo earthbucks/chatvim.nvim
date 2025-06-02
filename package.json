@@ -4,6 +4,7 @@
   "description": "Text completions in neovim.",
   "main": "stream.js",
   "scripts": {
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint --write --unsafe",
     "format": "biome format --write",
