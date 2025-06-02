@@ -133,21 +133,7 @@ rl.on("line", async (line) => {
             console.error("Error generating chat completion:", error);
             return;
         }
-        // process.stdout.write(
-        //   `${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`,
-        // );
-        // setTimeout(() => {
-        //   // Simulate a response
-        //   const chatLogString = chatLog
-        //     .map((msg) => `${msg.role}: ${msg.content}`)
-        //     .join("\n");
-        //   const response = `This is a simulated response for the input: ${chatLogString}`;
-        //   process.stdout.write(
-        //     `${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`,
-        //   );
-        //   process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
-        //   process.stdout.write(`${JSON.stringify({ done: true })}\n`);
-        // }, 500);
+        process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
     }
     else {
         console.error("Unsupported method:", method);

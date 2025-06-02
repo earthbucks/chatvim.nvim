@@ -23,17 +23,31 @@ function M.complete_text()
       return lines[1]
     end
 
-    if self.first_chunk
+    if
+      self.first_chunk
       and self.orig_last_line ~= ""
-      and self.orig_last_line == vim.api.nvim_buf_get_lines(self.bufnr, self.orig_line_count - 1, self.orig_line_count, false)[1]
+      and self.orig_last_line
+        == vim.api.nvim_buf_get_lines(self.bufnr, self.orig_line_count - 1, self.orig_line_count, false)[1]
     then
-      vim.api.nvim_buf_set_lines(self.bufnr, self.orig_line_count - 1, self.orig_line_count, false, { self.orig_last_line .. lines[1] })
+      vim.api.nvim_buf_set_lines(
+        self.bufnr,
+        self.orig_line_count - 1,
+        self.orig_line_count,
+        false,
+        { self.orig_last_line .. lines[1] }
+      )
     else
       vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
     end
 
     if #lines > 2 then
-      vim.api.nvim_buf_set_lines(self.bufnr, last_line_num + 1, last_line_num + 1, false, { unpack(lines, 2, #lines - 1) })
+      vim.api.nvim_buf_set_lines(
+        self.bufnr,
+        last_line_num + 1,
+        last_line_num + 1,
+        false,
+        { unpack(lines, 2, #lines - 1) }
+      )
     end
 
     vim.api.nvim_buf_set_lines(
@@ -43,6 +57,12 @@ function M.complete_text()
       false,
       { lines[#lines] }
     )
+
+    -- Scroll to the last line to ensure new data is visible
+    local win = vim.api.nvim_get_current_win()
+    local last_line = vim.api.nvim_buf_line_count(self.bufnr)
+    vim.api.nvim_win_set_cursor(win, { last_line, 0 })
+
     return lines[#lines]
   end
 
