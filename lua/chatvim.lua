@@ -46,4 +46,6 @@ vim.api.nvim_create_user_command("ChatVimComplete", function()
 	require("chatvim").complete_text()
 end, {})
 
+vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", { noremap = true, silent = true })
+
 return M
