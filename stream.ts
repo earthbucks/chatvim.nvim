@@ -1,7 +1,7 @@
-import * as readline from 'readline';
+import * as readline from "readline";
 
 const rl = readline.createInterface({ input: process.stdin });
-rl.on('line', (line: string) => {
+rl.on("line", (line: string) => {
   const req = JSON.parse(line);
   // Simulate streaming
   if (req.method === "complete") {
@@ -11,8 +11,7 @@ rl.on('line', (line: string) => {
       process.stdout.write(JSON.stringify({ chunk: "This is a streamed response." }) + "\n");
       process.stdout.write(JSON.stringify({ done: true }) + "\n");
     }, 500);
-  }
-  else {
+  } else {
     process.stdout.write(JSON.stringify({ chunk: "Hello " }) + "\n");
     setTimeout(() => {
       process.stdout.write(JSON.stringify({ chunk: "world!" }) + "\n");
