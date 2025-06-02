@@ -1,5 +1,7 @@
 import * as readline from "readline";
 import z from "zod";
+import * as TOML from "@iarna/toml";
+import YAML from "yaml";
 
 const SettingsSchema = z.object({
   delimiter: z.string().default("==="),
