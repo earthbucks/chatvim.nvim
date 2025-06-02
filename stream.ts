@@ -64,7 +64,7 @@ function parseText(text: string) {
   if (yamlMatch) {
     return text.replace(yamlMatch[0], "").trim();
   }
-  return text.trim();
+  return text;
 }
 
 const rl = readline.createInterface({ input: process.stdin });
