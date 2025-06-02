@@ -102,11 +102,16 @@ rl.on("line", (line) => {
             console.error("Last message must be from the user and cannot be empty.");
             return;
         }
+        process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
         process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
         setTimeout(() => {
             // Simulate a response
-            const response = `This is a simulated response for the input: ${chatLog}`;
+            const chatLogString = chatLog
+                .map((msg) => `${msg.role}: ${msg.content}`)
+                .join("\n");
+            const response = `This is a simulated response for the input: ${chatLogString}`;
             process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
+            process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
             process.stdout.write(`${JSON.stringify({ done: true })}\n`);
         }, 500);
     }
