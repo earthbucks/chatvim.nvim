@@ -3,6 +3,19 @@ import z from "zod";
 import * as TOML from "@iarna/toml";
 import YAML from "yaml";
 
+const SettingsSchema = z.object({
+  delimiter: z.string().default("==="),
+});
+
+const MethodSchema = z.literal("complete");
+
+const InputSchema = z.object({
+  method: MethodSchema,
+  params: z.object({
+    text: z.string(),
+  }),
+});
+
 // Extract front matter from markdown text
 function parseFrontMatter(text: string) {
   const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
@@ -24,18 +37,13 @@ function parseFrontMatter(text: string) {
   return {};
 }
 
-const SettingsSchema = z.object({
-  delimiter: z.string().default("==="),
-});
-
-const MethodSchema = z.literal("complete");
-
-const InputSchema = z.object({
-  method: MethodSchema,
-  params: z.object({
-    text: z.string(),
-  }),
-});
+function getSettingsFromFrontMatter(text: string) {
+  const frontMatter = parseFrontMatter(text);
+  if (frontMatter && typeof frontMatter === "object") {
+    return SettingsSchema.parse(frontMatter);
+  }
+  return SettingsSchema.parse({});
+}
 
 const rl = readline.createInterface({ input: process.stdin });
 rl.on("line", (line: string) => {
