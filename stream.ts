@@ -1,6 +1,10 @@
 import * as readline from "readline";
 import z from "zod";
 
+const SettingsSchema = z.object({
+  delimiter: z.string().default("==="),
+});
+
 const rl = readline.createInterface({ input: process.stdin });
 rl.on("line", (line: string) => {
   const req = JSON.parse(line);
