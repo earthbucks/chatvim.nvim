@@ -92,9 +92,16 @@ rl.on("line", (line) => {
         const chatLog = arrText.map((s, index) => {
             return {
                 role: index % 2 === 0 ? "user" : "assistant",
-                content: s,
+                content: s.trim(),
             };
         });
+        // confirm that last message is from the user and it is not empty
+        if (chatLog.length === 0 ||
+            chatLog[chatLog.length - 1]?.role !== "user" ||
+            !chatLog[chatLog.length - 1]?.content) {
+            console.error("Last message must be from the user and cannot be empty.");
+            return;
+        }
         process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
         setTimeout(() => {
             // Simulate a response

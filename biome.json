@@ -1,7 +1,13 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "formatter": {
-    "ignore": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/public/**", "**/.react-router/**"],
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/public/**",
+      "**/.react-router/**"
+    ],
     "enabled": true,
     "formatWithErrors": false,
     "indentStyle": "space",
@@ -12,7 +18,12 @@
   },
   "organizeImports": { "enabled": true },
   "linter": {
-    "ignore": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/.react-router/**"],
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.react-router/**"
+    ],
     "enabled": true,
     "rules": {
       "recommended": true,
