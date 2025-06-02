@@ -68,16 +68,19 @@ function parseText(text: string) {
   return text;
 }
 
-export const aiApiXAI = new OpenAI({
-  apiKey: process.env.XAI_API_KEY,
-  baseURL: "https://api.x.ai/v1",
-});
-
 export async function generateChatCompletionStream({
   messages,
 }: {
   messages: { role: "assistant" | "user" | "system"; content: string }[];
 }) {
+  if (!process.env.XAI_API_KEY) {
+    throw new Error("XAI_API_KEY environment variable is not set.");
+  }
+  const aiApiXAI = new OpenAI({
+    apiKey: process.env.XAI_API_KEY,
+    baseURL: "https://api.x.ai/v1",
+  });
+
   const stream = await aiApiXAI.chat.completions.create({
     model: "grok-3-beta",
     messages,
@@ -139,18 +142,23 @@ rl.on("line", async (line: string) => {
 
     process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
 
-    const stream = await generateChatCompletionStream({
-      messages: chatLog,
-    });
+    try {
+      const stream = await generateChatCompletionStream({
+        messages: chatLog,
+      });
 
-    for await (const chunk of stream) {
-      if (chunk.choices[0]?.delta.content) {
-        process.stdout.write(
-          `${JSON.stringify({
-            chunk: chunk.choices[0].delta.content,
-          })}\n`,
-        );
+      for await (const chunk of stream) {
+        if (chunk.choices[0]?.delta.content) {
+          process.stdout.write(
+            `${JSON.stringify({
+              chunk: chunk.choices[0].delta.content,
+            })}\n`,
+          );
+        }
       }
+    } catch (error) {
+      console.error("Error generating chat completion:", error);
+      return;
     }
 
     // process.stdout.write(
