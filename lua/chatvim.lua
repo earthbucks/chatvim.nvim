@@ -84,18 +84,20 @@ function M.complete_text()
     end
   end
 
+  local function on_stderr(job_id, data, event)
+    for _, line in ipairs(data) do
+      if line ~= "" then
+        vim.api.nvim_echo({ { "[Error] " .. line, "ErrorMsg" } }, false, {})
+      end
+    end
+  end
+
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
   local stream_js_path = plugin_dir .. "../stream.js"
 
   local job_id = vim.fn.jobstart({ "node", stream_js_path }, {
     on_stdout = on_stdout,
-    on_stderr = function(job_id, data, event)
-      for _, line in ipairs(data) do
-        if line ~= "" then
-          vim.api.nvim_echo({ { "[Error] " .. line, "ErrorMsg" } }, false, {})
-        end
-      end
-    end,
+    on_stderr = on_stderr,
 
     stdout_buffered = false,
   })
