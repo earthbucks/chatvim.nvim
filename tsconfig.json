@@ -1,5 +1,5 @@
 {
-  "include": ["*.ts", "**/*.ts", "**/*.tsx", ".react-router/types/**/*"],
+  "include": ["*.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@react-router/node", "vite/client"],
@@ -17,10 +17,6 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "noEmit": true,
-    "rootDirs": [".", "./.react-router/types"],
-    "paths": {
-      "~app/*": ["./app/*"],
-      "~server/*": ["./server/*"]
-    }
+    "rootDirs": ["."]
   }
 }
