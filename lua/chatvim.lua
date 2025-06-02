@@ -6,8 +6,12 @@ function M.complete_text()
 		vim.api.nvim_echo({ { "No file open to complete.", "WarningMsg" } }, false, {})
 		return
 	end
+
 	local initialLines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local text = table.concat(initialLines, "\n")
+	local orig_last_line = initialLines[#initialLines] or ""
+	local orig_line_count = #initialLines
+	local first_chunk = true
 
 	local partial = ""
 
@@ -24,8 +28,13 @@ function M.complete_text()
 						vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
 						partial = lines[1]
 					else
-						-- Append first to last line
-						vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
+						-- On first chunk, if original input does not end with newline, append to last line
+						if first_chunk and orig_last_line ~= "" and orig_last_line == vim.api.nvim_buf_get_lines(bufnr, orig_line_count - 1, orig_line_count, false)[1] then
+							vim.api.nvim_buf_set_lines(bufnr, orig_line_count - 1, orig_line_count, false, { orig_last_line .. lines[1] })
+						else
+							vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
+						end
+						first_chunk = false
 						-- Insert all complete lines except the first and last
 						if #lines > 2 then
 							vim.api.nvim_buf_set_lines(bufnr, last_line_num + 1, last_line_num + 1, false, { unpack(lines, 2, #lines - 1) })
