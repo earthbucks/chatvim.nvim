@@ -1,4 +1,5 @@
 import * as readline from "readline";
+import z from "zod";
 
 const rl = readline.createInterface({ input: process.stdin });
 rl.on("line", (line: string) => {
