@@ -48,6 +48,7 @@ function getSettingsFromFrontMatter(text: string) {
 }
 
 const rl = readline.createInterface({ input: process.stdin });
+
 rl.on("line", (line: string) => {
   const req = JSON.parse(line);
   const parsed = InputSchema.safeParse(req);
