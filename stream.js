@@ -1,5 +1,7 @@
 import * as readline from "readline";
 import z from "zod";
+import * as TOML from "@iarna/toml";
+import YAML from "yaml";
 const SettingsSchema = z.object({
     delimiter: z.string().default("==="),
 });
@@ -10,6 +12,35 @@ const InputSchema = z.object({
         text: z.string(),
     }),
 });
+// Extract front matter from markdown text
+function parseFrontMatter(text) {
+    const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
+    if (tomlMatch) {
+        try {
+            return TOML.parse(tomlMatch[1] || "");
+        }
+        catch (e) {
+            console.error("Invalid TOML front matter:", e);
+        }
+    }
+    const yamlMatch = text.match(/^---\n([\s\S]*?)\n---/);
+    if (yamlMatch) {
+        try {
+            return YAML.parse(yamlMatch[1] || "");
+        }
+        catch (e) {
+            console.error("Invalid YAML front matter:", e);
+        }
+    }
+    return {};
+}
+function getSettingsFromFrontMatter(text) {
+    const frontMatter = parseFrontMatter(text);
+    if (frontMatter && typeof frontMatter === "object") {
+        return SettingsSchema.parse(frontMatter);
+    }
+    return SettingsSchema.parse({});
+}
 const rl = readline.createInterface({ input: process.stdin });
 rl.on("line", (line) => {
     const req = JSON.parse(line);
@@ -24,6 +55,10 @@ rl.on("line", (line) => {
         return;
     }
     const { text } = params;
+    // now, to get settings, the markdown input may have toml or yaml front
+    // matter. toml is preferred. toml starts with '+++' and yaml starts with
+    // '---'.
+    // TODO: implement parsing of front matter
     const settings = SettingsSchema.parse({ delimiter: "===" });
     const delimiter = settings.delimiter;
     process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
@@ -33,13 +68,4 @@ rl.on("line", (line) => {
         process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
         process.stdout.write(`${JSON.stringify({ done: true })}\n`);
     }, 500);
-    // Simulate streaming
-    // if (req.method === "complete") {
-    //   // Simulate streaming a completion
-    //   process.stdout.write(`${JSON.stringify({ chunk: "## AI Completion\n" })}\n`);
-    //   setTimeout(() => {
-    //     process.stdout.write(`${JSON.stringify({ chunk: "This is a streamed response." })}\n`);
-    //     process.stdout.write(`${JSON.stringify({ done: true })}\n`);
-    //   }, 500);
-    // }
 });
