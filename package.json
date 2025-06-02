@@ -17,6 +17,8 @@
     "@types/node": "^22.15.29"
   },
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "yaml": "^2.8.0",
     "zod": "^3.25.48"
   }
 }
