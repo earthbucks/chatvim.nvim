@@ -69,40 +69,42 @@ rl.on("line", (line) => {
         return;
     }
     const { method, params } = parsed.data;
-    if (method !== "complete") {
+    if (method === "complete") {
+        const { text } = params;
+        // now, to get settings, the markdown input may have toml or yaml front
+        // matter. toml is preferred. toml starts with '+++' and yaml starts with
+        // '---'.
+        const settings = getSettingsFromFrontMatter(text);
+        const delimiter = settings.delimiter;
+        const delimiterPrefix = settings.delimiterPrefix;
+        const delimiterSuffix = settings.delimiterSuffix;
+        const fullDelimiter = `${delimiterPrefix}${delimiter}${delimiterSuffix}`;
+        const parsedText = parseText(text);
+        if (!parsedText) {
+            console.error("No text provided after front matter.");
+            return;
+        }
+        const arrText = parsedText
+            .split(fullDelimiter)
+            .map((s) => s.trim())
+            .filter((s) => s.length > 0);
+        // first message is always from the user. then, alternate user/assistant
+        const chatLog = arrText.map((s, index) => {
+            return {
+                role: index % 2 === 0 ? "user" : "assistant",
+                content: s,
+            };
+        });
+        process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
+        setTimeout(() => {
+            // Simulate a response
+            const response = `This is a simulated response for the input: ${chatLog}`;
+            process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
+            process.stdout.write(`${JSON.stringify({ done: true })}\n`);
+        }, 500);
+    }
+    else {
         console.error("Unsupported method:", method);
         return;
     }
-    const { text } = params;
-    // now, to get settings, the markdown input may have toml or yaml front
-    // matter. toml is preferred. toml starts with '+++' and yaml starts with
-    // '---'.
-    const settings = getSettingsFromFrontMatter(text);
-    const delimiter = settings.delimiter;
-    const delimiterPrefix = settings.delimiterPrefix;
-    const delimiterSuffix = settings.delimiterSuffix;
-    const fullDelimiter = `${delimiterPrefix}${delimiter}${delimiterSuffix}`;
-    const parsedText = parseText(text);
-    if (!parsedText) {
-        console.error("No text provided after front matter.");
-        return;
-    }
-    const arrText = parsedText
-        .split(fullDelimiter)
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-    // first message is always from the user. then, alternate user/assistant
-    const chatLog = arrText.map((s, index) => {
-        return {
-            role: index % 2 === 0 ? "user" : "assistant",
-            content: s,
-        };
-    });
-    process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
-    setTimeout(() => {
-        // Simulate a response
-        const response = `This is a simulated response for the input: ${chatLog}`;
-        process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
-        process.stdout.write(`${JSON.stringify({ done: true })}\n`);
-    }, 500);
 });
