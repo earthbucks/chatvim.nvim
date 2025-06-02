@@ -103,7 +103,7 @@ rl.on("line", (line) => {
             return;
         }
         process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
-        process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
+        process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`);
         setTimeout(() => {
             // Simulate a response
             const chatLogString = chatLog

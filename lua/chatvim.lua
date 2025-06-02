@@ -8,7 +8,7 @@ function M.complete_text()
 	end
 	local initialLines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local text = table.concat(initialLines, "\n")
-	-- local config = { delimiter = "===" }
+
 	local partial = ""
 
 	local function on_stdout(job_id, data, event)
@@ -18,36 +18,22 @@ function M.complete_text()
 				if ok and msg.chunk then
 					partial = partial .. msg.chunk
 					local lines = vim.split(partial, "\n", { plain = true })
-					local last = table.remove(lines)
 					local last_line_num = vim.api.nvim_buf_line_count(bufnr) - 1
-					if #lines > 0 then
-						-- Append all complete lines
-						vim.api.nvim_buf_set_lines(
-							bufnr,
-							last_line_num,
-							last_line_num + 1,
-							false,
-							{
-								(vim.api.nvim_buf_get_lines(bufnr, last_line_num, last_line_num + 1, false)[1] or "")
-									.. lines[1],
-							}
-						)
-						if #lines > 1 then
-							vim.api.nvim_buf_set_lines(
-								bufnr,
-								last_line_num + 1,
-								last_line_num + 1,
-								false,
-								{ unpack(lines, 2) }
-							)
+					if #lines == 1 then
+						-- Only a partial line, update last line
+						vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
+						partial = lines[1]
+					else
+						-- Append first to last line
+						vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
+						-- Insert all complete lines except the first and last
+						if #lines > 2 then
+							vim.api.nvim_buf_set_lines(bufnr, last_line_num + 1, last_line_num + 1, false, { unpack(lines, 2, #lines - 1) })
 						end
-						last_line_num = vim.api.nvim_buf_line_count(bufnr) - 1
+						-- Add a new line for the last segment (partial or empty)
+						vim.api.nvim_buf_set_lines(bufnr, last_line_num + (#lines - 1), last_line_num + (#lines - 1) + 1, false, { lines[#lines] })
+						partial = lines[#lines]
 					end
-					-- Update the last (possibly partial) line
-					if last ~= nil then
-						vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { last })
-					end
-					partial = last or ""
 				elseif ok and msg.done then
 					-- Flush any remaining partial line
 					if partial ~= "" then
@@ -81,7 +67,6 @@ function M.complete_text()
 		method = "complete",
 		params = {
 			text = text,
-			-- config = config,
 		},
 	}
 	vim.fn.chansend(job_id, vim.fn.json_encode(payload) .. "\n")

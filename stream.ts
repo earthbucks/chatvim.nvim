@@ -122,7 +122,7 @@ rl.on("line", (line: string) => {
 
     process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
     process.stdout.write(
-      `${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`,
+      `${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`,
     );
     setTimeout(() => {
       // Simulate a response
