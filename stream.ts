@@ -23,7 +23,7 @@ const ChatMessageSchema = z.object({
   content: z.string(),
 });
 
-const ChatLogSchema = z.array(ChatMessageSchema).min(1).default([]);
+const ChatLogSchema = z.array(ChatMessageSchema).default([]);
 
 // Extract front matter from markdown text
 function parseFrontMatter(text: string) {
