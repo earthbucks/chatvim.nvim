@@ -18,6 +18,13 @@ const InputSchema = z.object({
   }),
 });
 
+const ChatMessageSchema = z.object({
+  role: z.enum(["user", "assistant"]),
+  content: z.string(),
+});
+
+const ChatSchema = z.array(ChatMessageSchema).min(1).default([]);
+
 // Extract front matter from markdown text
 function parseFrontMatter(text: string) {
   const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
@@ -85,6 +92,12 @@ rl.on("line", (line: string) => {
   const delimiterPrefix = settings.delimiterPrefix;
   const delimiterSuffix = settings.delimiterSuffix;
   const fullDelimiter = `${delimiterPrefix}${delimiter}${delimiterSuffix}`;
+
+  const parsedText = parseText(text);
+  if (!parsedText) {
+    console.error("No text provided after front matter.");
+    return;
+  }
 
   process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
   setTimeout(() => {
