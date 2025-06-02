@@ -34,9 +34,12 @@ end
 
 function M.complete_markdown()
 	local bufnr = vim.api.nvim_get_current_buf()
+	if not vim.api.nvim_buf_get_option(bufnr, "modifiable") then
+		vim.api.nvim_echo({ { "No file open to complete.", "WarningMsg" } }, false, {})
+		return
+	end
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local text = table.concat(lines, "\n")
-	-- Example config, you can extract from buffer or user input
 	local config = { delimiter = "===" }
 
 	local function on_stdout(job_id, data, event)
@@ -44,7 +47,6 @@ function M.complete_markdown()
 			if line ~= "" then
 				local ok, msg = pcall(vim.fn.json_decode, line)
 				if ok and msg.chunk then
-					-- Insert streamed chunk at end of buffer
 					local last_line = vim.api.nvim_buf_line_count(bufnr)
 					local lines_to_insert = vim.split(msg.chunk, "\n", { plain = true, trimempty = true })
 					vim.api.nvim_buf_set_lines(bufnr, last_line, last_line, false, lines_to_insert)
