@@ -4,6 +4,10 @@
   "description": "Text completions in neovim.",
   "main": "stream.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chatvim/chatvim.nvim.git"
+  },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
