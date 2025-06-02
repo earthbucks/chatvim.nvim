@@ -98,7 +98,6 @@ rl.on("line", (line: string) => {
 
     const arrText = parsedText
       .split(fullDelimiter)
-      .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
     // first message is always from the user. then, alternate user/assistant
@@ -106,7 +105,7 @@ rl.on("line", (line: string) => {
       arrText.map((s, index) => {
         return {
           role: index % 2 === 0 ? "user" : "assistant",
-          content: s.trim(),
+          content: s,
         };
       });
 

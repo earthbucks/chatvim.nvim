@@ -86,13 +86,12 @@ rl.on("line", (line) => {
         }
         const arrText = parsedText
             .split(fullDelimiter)
-            .map((s) => s.trim())
             .filter((s) => s.length > 0);
         // first message is always from the user. then, alternate user/assistant
         const chatLog = arrText.map((s, index) => {
             return {
                 role: index % 2 === 0 ? "user" : "assistant",
-                content: s.trim(),
+                content: s,
             };
         });
         // confirm that last message is from the user and it is not empty
