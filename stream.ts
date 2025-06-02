@@ -4,7 +4,9 @@ import * as TOML from "@iarna/toml";
 import YAML from "yaml";
 
 const SettingsSchema = z.object({
+  delimiterPrefix: z.string().default("\n\n"),
   delimiter: z.string().default("==="),
+  delimiterSuffix: z.string().default("\n\n"),
 });
 
 const MethodSchema = z.literal("complete");
@@ -63,9 +65,8 @@ rl.on("line", (line: string) => {
   // now, to get settings, the markdown input may have toml or yaml front
   // matter. toml is preferred. toml starts with '+++' and yaml starts with
   // '---'.
-  // TODO: implement parsing of front matter
+  const settings = getSettingsFromFrontMatter(text);
 
-  const settings = SettingsSchema.parse({ delimiter: "===" });
   const delimiter = settings.delimiter;
   process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
   setTimeout(() => {
