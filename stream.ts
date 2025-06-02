@@ -47,6 +47,19 @@ function getSettingsFromFrontMatter(text: string) {
   return SettingsSchema.parse({});
 }
 
+function parseText(text: string) {
+  // Remove front matter if it exists
+  const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
+  if (tomlMatch) {
+    return text.replace(tomlMatch[0], "").trim();
+  }
+  const yamlMatch = text.match(/^---\n([\s\S]*?)\n---/);
+  if (yamlMatch) {
+    return text.replace(yamlMatch[0], "").trim();
+  }
+  return text.trim();
+}
+
 const rl = readline.createInterface({ input: process.stdin });
 
 rl.on("line", (line: string) => {
