@@ -2,6 +2,7 @@ import * as readline from "readline";
 import z from "zod/v4";
 import * as TOML from "@iarna/toml";
 import YAML from "yaml";
+import { OpenAI } from "openai";
 const SettingsSchema = z.object({
     delimiterPrefix: z.string().default("\n\n"),
     delimiter: z.string().default("==="),
@@ -18,7 +19,7 @@ const ChatMessageSchema = z.object({
     role: z.enum(["user", "assistant"]),
     content: z.string(),
 });
-const ChatLogSchema = z.array(ChatMessageSchema).min(1).default([]);
+const ChatLogSchema = z.array(ChatMessageSchema).default([]);
 // Extract front matter from markdown text
 function parseFrontMatter(text) {
     const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
@@ -60,8 +61,21 @@ function parseText(text) {
     }
     return text;
 }
+export const aiApiXAI = new OpenAI({
+    apiKey: process.env.XAI_API_KEY,
+    baseURL: "https://api.x.ai/v1",
+});
+export async function generateChatCompletionStream({ messages, }) {
+    const stream = await aiApiXAI.chat.completions.create({
+        model: "grok-3-beta",
+        messages,
+        max_tokens: undefined,
+        stream: true,
+    });
+    return stream;
+}
 const rl = readline.createInterface({ input: process.stdin });
-rl.on("line", (line) => {
+rl.on("line", async (line) => {
     const req = JSON.parse(line);
     const parsed = InputSchema.safeParse(req);
     if (!parsed.success) {
@@ -84,9 +98,7 @@ rl.on("line", (line) => {
             console.error("No text provided after front matter.");
             return;
         }
-        const arrText = parsedText
-            .split(fullDelimiter)
-            .filter((s) => s.length > 0);
+        const arrText = parsedText.split(fullDelimiter).filter((s) => s.length > 0);
         // first message is always from the user. then, alternate user/assistant
         const chatLog = arrText.map((s, index) => {
             return {
@@ -102,17 +114,31 @@ rl.on("line", (line) => {
             return;
         }
         process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
-        process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`);
-        setTimeout(() => {
-            // Simulate a response
-            const chatLogString = chatLog
-                .map((msg) => `${msg.role}: ${msg.content}`)
-                .join("\n");
-            const response = `This is a simulated response for the input: ${chatLogString}`;
-            process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
-            process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
-            process.stdout.write(`${JSON.stringify({ done: true })}\n`);
-        }, 500);
+        const stream = await generateChatCompletionStream({
+            messages: chatLog,
+        });
+        for await (const chunk of stream) {
+            if (chunk.choices[0]?.delta.content) {
+                process.stdout.write(`${JSON.stringify({
+                    chunk: chunk.choices[0].delta.content,
+                })}\n`);
+            }
+        }
+        // process.stdout.write(
+        //   `${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`,
+        // );
+        // setTimeout(() => {
+        //   // Simulate a response
+        //   const chatLogString = chatLog
+        //     .map((msg) => `${msg.role}: ${msg.content}`)
+        //     .join("\n");
+        //   const response = `This is a simulated response for the input: ${chatLogString}`;
+        //   process.stdout.write(
+        //     `${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`,
+        //   );
+        //   process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
+        //   process.stdout.write(`${JSON.stringify({ done: true })}\n`);
+        // }, 500);
     }
     else {
         console.error("Unsupported method:", method);

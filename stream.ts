@@ -89,7 +89,7 @@ export async function generateChatCompletionStream({
 
 const rl = readline.createInterface({ input: process.stdin });
 
-rl.on("line", (line: string) => {
+rl.on("line", async (line: string) => {
   const req = JSON.parse(line);
   const parsed = InputSchema.safeParse(req);
   if (!parsed.success) {
@@ -138,21 +138,36 @@ rl.on("line", (line: string) => {
     }
 
     process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
-    process.stdout.write(
-      `${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`,
-    );
-    setTimeout(() => {
-      // Simulate a response
-      const chatLogString = chatLog
-        .map((msg) => `${msg.role}: ${msg.content}`)
-        .join("\n");
-      const response = `This is a simulated response for the input: ${chatLogString}`;
-      process.stdout.write(
-        `${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`,
-      );
-      process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
-      process.stdout.write(`${JSON.stringify({ done: true })}\n`);
-    }, 500);
+
+    const stream = await generateChatCompletionStream({
+      messages: chatLog,
+    });
+
+    for await (const chunk of stream) {
+      if (chunk.choices[0]?.delta.content) {
+        process.stdout.write(
+          `${JSON.stringify({
+            chunk: chunk.choices[0].delta.content,
+          })}\n`,
+        );
+      }
+    }
+
+    // process.stdout.write(
+    //   `${JSON.stringify({ chunk: `## User Input\n${text}\n\n` })}\n`,
+    // );
+    // setTimeout(() => {
+    //   // Simulate a response
+    //   const chatLogString = chatLog
+    //     .map((msg) => `${msg.role}: ${msg.content}`)
+    //     .join("\n");
+    //   const response = `This is a simulated response for the input: ${chatLogString}`;
+    //   process.stdout.write(
+    //     `${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`,
+    //   );
+    //   process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
+    //   process.stdout.write(`${JSON.stringify({ done: true })}\n`);
+    // }, 500);
   } else {
     console.error("Unsupported method:", method);
     return;
