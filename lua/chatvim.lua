@@ -16,8 +16,9 @@ function M.complete_text()
 	local partial = ""
 
 	-- Appends a chunk (which may contain newlines) to the end of the buffer.
-	-- Neovim buffers are line-based, so you cannot insert a string with embedded newlines directly.
-	-- This function splits the chunk on '\n' and appends each segment as a separate line.
+	-- Neovim buffers are line-based, so you cannot insert a string with embedded
+	-- newlines directly. This function splits the chunk on '\n' and appends each
+	-- segment as a separate line.
 	local function append_chunk_to_buffer(bufnr, chunk, opts)
 		opts = opts or {}
 		local orig_last_line = opts.orig_last_line
@@ -33,17 +34,40 @@ function M.complete_text()
 			return lines[1]
 		else
 			-- On first chunk, if original input does not end with newline, append to last line
-			if first_chunk and orig_last_line ~= "" and orig_last_line == vim.api.nvim_buf_get_lines(bufnr, orig_line_count - 1, orig_line_count, false)[1] then
-				vim.api.nvim_buf_set_lines(bufnr, orig_line_count - 1, orig_line_count, false, { orig_last_line .. lines[1] })
+			if
+				first_chunk
+				and orig_last_line ~= ""
+				and orig_last_line
+					== vim.api.nvim_buf_get_lines(bufnr, orig_line_count - 1, orig_line_count, false)[1]
+			then
+				vim.api.nvim_buf_set_lines(
+					bufnr,
+					orig_line_count - 1,
+					orig_line_count,
+					false,
+					{ orig_last_line .. lines[1] }
+				)
 			else
 				vim.api.nvim_buf_set_lines(bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
 			end
 			-- Insert all complete lines except the first and last
 			if #lines > 2 then
-				vim.api.nvim_buf_set_lines(bufnr, last_line_num + 1, last_line_num + 1, false, { unpack(lines, 2, #lines - 1) })
+				vim.api.nvim_buf_set_lines(
+					bufnr,
+					last_line_num + 1,
+					last_line_num + 1,
+					false,
+					{ unpack(lines, 2, #lines - 1) }
+				)
 			end
 			-- Add a new line for the last segment (partial or empty)
-			vim.api.nvim_buf_set_lines(bufnr, last_line_num + (#lines - 1), last_line_num + (#lines - 1) + 1, false, { lines[#lines] })
+			vim.api.nvim_buf_set_lines(
+				bufnr,
+				last_line_num + (#lines - 1),
+				last_line_num + (#lines - 1) + 1,
+				false,
+				{ lines[#lines] }
+			)
 			return lines[#lines]
 		end
 	end
