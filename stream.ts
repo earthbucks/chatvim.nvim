@@ -3,6 +3,27 @@ import z from "zod";
 import * as TOML from "@iarna/toml";
 import YAML from "yaml";
 
+// Extract front matter from markdown text
+function parseFrontMatter(text: string) {
+  const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
+  if (tomlMatch) {
+    try {
+      return TOML.parse(tomlMatch[1] || "");
+    } catch (e) {
+      console.error("Invalid TOML front matter:", e);
+    }
+  }
+  const yamlMatch = text.match(/^---\n([\s\S]*?)\n---/);
+  if (yamlMatch) {
+    try {
+      return YAML.parse(yamlMatch[1] || "");
+    } catch (e) {
+      console.error("Invalid YAML front matter:", e);
+    }
+  }
+  return {};
+}
+
 const SettingsSchema = z.object({
   delimiter: z.string().default("==="),
 });
