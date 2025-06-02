@@ -8,7 +8,7 @@ function M.complete_text()
 	end
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 	local text = table.concat(lines, "\n")
-	local config = { delimiter = "===" }
+	-- local config = { delimiter = "===" }
 
 	local function on_stdout(job_id, data, event)
 		for _, line in ipairs(data) do
@@ -36,7 +36,7 @@ function M.complete_text()
 		method = "complete",
 		params = {
 			text = text,
-			config = config,
+			-- config = config,
 		},
 	}
 	vim.fn.chansend(job_id, vim.fn.json_encode(payload) .. "\n")

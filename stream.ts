@@ -5,6 +5,13 @@ const SettingsSchema = z.object({
   delimiter: z.string().default("==="),
 });
 
+const InputSchema = z.object({
+  method: z.string(),
+  params: z.object({
+    text: z.string(),
+  }),
+});
+
 const rl = readline.createInterface({ input: process.stdin });
 rl.on("line", (line: string) => {
   const req = JSON.parse(line);
