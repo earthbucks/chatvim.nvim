@@ -23,7 +23,7 @@ const ChatMessageSchema = z.object({
   content: z.string(),
 });
 
-const ChatSchema = z.array(ChatMessageSchema).min(1).default([]);
+const ChatLogSchema = z.array(ChatMessageSchema).min(1).default([]);
 
 // Extract front matter from markdown text
 function parseFrontMatter(text: string) {
@@ -99,10 +99,23 @@ rl.on("line", (line: string) => {
     return;
   }
 
+  const arrText = parsedText
+    .split(fullDelimiter)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+
+  // first message is always from the user. then, alternate user/assistant
+  const chatLog: { role: "user" | "assistant"; content: string }[] = arrText.map((s, index) => {
+    return {
+      role: index % 2 === 0 ? "user" : "assistant",
+      content: s,
+    };
+  });
+
   process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
   setTimeout(() => {
     // Simulate a response
-    const response = `This is a simulated response for the input: ${text}`;
+    const response = `This is a simulated response for the input: ${chatLog}`;
     process.stdout.write(`${JSON.stringify({ chunk: `## AI Response\n${response}` })}\n`);
     process.stdout.write(`${JSON.stringify({ done: true })}\n`);
   }, 500);
