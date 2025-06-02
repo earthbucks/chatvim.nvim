@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Text completions in neovim.",
   "main": "stream.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
