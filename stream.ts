@@ -68,6 +68,10 @@ rl.on("line", (line: string) => {
   const settings = getSettingsFromFrontMatter(text);
 
   const delimiter = settings.delimiter;
+  const delimiterPrefix = settings.delimiterPrefix;
+  const delimiterSuffix = settings.delimiterSuffix;
+  const fullDelimiter = `${delimiterPrefix}${delimiter}${delimiterSuffix}`;
+
   process.stdout.write(`${JSON.stringify({ chunk: `## User Input\n${text}` })}\n`);
   setTimeout(() => {
     // Simulate a response
