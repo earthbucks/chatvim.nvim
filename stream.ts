@@ -2,6 +2,7 @@ import * as readline from "readline";
 import z from "zod/v4";
 import * as TOML from "@iarna/toml";
 import YAML from "yaml";
+import { OpenAI } from "openai";
 
 const SettingsSchema = z.object({
   delimiterPrefix: z.string().default("\n\n"),
@@ -67,6 +68,11 @@ function parseText(text: string) {
   return text;
 }
 
+export const aiApiXAI = new OpenAI({
+  apiKey: process.env.XAI_API_KEY,
+  baseURL: "https://api.x.ai/v1",
+});
+
 const rl = readline.createInterface({ input: process.stdin });
 
 rl.on("line", (line: string) => {
@@ -96,9 +102,7 @@ rl.on("line", (line: string) => {
       return;
     }
 
-    const arrText = parsedText
-      .split(fullDelimiter)
-      .filter((s) => s.length > 0);
+    const arrText = parsedText.split(fullDelimiter).filter((s) => s.length > 0);
 
     // first message is always from the user. then, alternate user/assistant
     const chatLog: { role: "user" | "assistant"; content: string }[] =
