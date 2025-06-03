@@ -7,12 +7,26 @@ Currently, only supports Grok.
 ## Features
 
 The purpose of ChatVim is to treat markdown documents as a conversation with an
-AI assistant, allowing you to ask questions and get answers in the context of
-the document. This is easier for some workflows than using a chat interface.
+AI assistant instead of a separate chat window or dialog box.
 
-## Usage
+You can save, copy, fork, version, and share the markdown document as you would
+with any other markdown file. This is easier for some workflows than using a
+separate chat interface.
 
-You must install node.js v22+.
+Because ChatVim uses chat completion models, there must be some way to separate
+user messages, assistant messages, and system messages. This is done using
+delimiters in the markdown document. The default delimiters are:
+
+- `# === USER ===` for user messages
+- `# === ASSISTANT ===` for assistant messages
+- `# === SYSTEM ===` for system messages
+
+You can customize these delimiters in the markdown front matter, explained
+below.
+
+## Installation
+
+You must first install node.js v22+.
 
 Set `XAI_API_KEY` environment variable to your xAI API key.
 
@@ -30,18 +44,22 @@ Install with LazyVim:
 :ChatVimComplete
 ```
 
-Completes the current markdown document using the AI model.
+Completes the current markdown document using the AI model. If no delimiters are
+present, it will treat the input as user input and append a response.
 
 ## Recommended Shortcuts
+
+Add these shortcuts to your nvim configuration to make it easier to use ChatVim.
 
 ```lua
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
 ```
 
-## Markdown Front Matter
+## Configuration
 
 Use "+++" for toml or "---" for yaml front matter. Front matter is used to
-specify settings for ChatVim.
+specify settings for ChatVim. Place the front matter at the top of your markdown
+document, before any content. The front matter should look like this:
 
 ```toml
 +++
@@ -52,6 +70,8 @@ assistantDelimiter = "# === ASSISTANT ==="
 systemDelimiter = "# === SYSTEM ==="
 +++
 ```
+
+All fields are optional.
 
 ## License
 
