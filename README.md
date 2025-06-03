@@ -10,7 +10,7 @@ Currently, only supports Grok.
 ## Features
 
 The purpose of ChatVim is to treat markdown documents as a conversation with an
-AI assistant instead of a separate chat window or dialog box.
+AI assistant instead of using a separate chat window or dialog box.
 
 You can save, copy, fork, version, and share the markdown document as you would
 with any other markdown file. This is easier for some workflows than using a
