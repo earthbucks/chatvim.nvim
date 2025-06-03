@@ -61,7 +61,7 @@ Use "+++" for toml or "---" for yaml front matter. Front matter is used to
 specify settings for ChatVim. Place the front matter at the top of your markdown
 document, before any content. The front matter should look like this:
 
-```toml
+```markdown
 +++
 delimiterPrefix = "\n\n"
 delimiterSuffix = "\n\n"
