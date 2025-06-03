@@ -21,13 +21,6 @@ const InputSchema = z.object({
   }),
 });
 
-const ChatMessageSchema = z.object({
-  role: z.enum(["user", "assistant", "system"]),
-  content: z.string(),
-});
-
-const ChatLogSchema = z.array(ChatMessageSchema).default([]);
-
 // Extract front matter from markdown text
 function parseFrontMatter(text: string) {
   const tomlMatch = text.match(/^\+\+\+\n([\s\S]*?)\n\+\+\+/);
