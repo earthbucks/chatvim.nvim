@@ -57,7 +57,7 @@ vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
 
 ## Configuration
 
-Use "+++" for toml or "---" for yaml front matter. Front matter is used to
+Use "+++" for TOML or "---" for YAML front matter. Front matter is used to
 specify settings for ChatVim. Place the front matter at the top of your markdown
 document, before any content. The front matter should look like this:
 
