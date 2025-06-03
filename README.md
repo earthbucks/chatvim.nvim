@@ -7,6 +7,10 @@ the chat window**. No special dialogs or UI elements are required.
 
 Currently, only supports Grok. More models will be added in the future.
 
+## Video Demo
+
+https://github.com/user-attachments/assets/7fe523e8-b953-4307-ac62-df58884bdfd0
+
 ## Features
 
 The purpose of ChatVim is to treat markdown documents as a conversation with an
