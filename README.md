@@ -43,6 +43,7 @@ Install with LazyVim:
 ```lua
 {
   "chatvim/chatvim.nvim",
+  build = "npm install",
 }
 ```
 
