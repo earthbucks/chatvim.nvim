@@ -5,8 +5,10 @@ import YAML from "yaml";
 import { OpenAI } from "openai";
 const SettingsSchema = z.object({
     delimiterPrefix: z.string().default("\n\n"),
-    delimiter: z.string().default("==="),
     delimiterSuffix: z.string().default("\n\n"),
+    userDelimiter: z.string().default("# === USER ==="),
+    assistantDelimiter: z.string().default("# === ASSISTANT ==="),
+    systemDelimiter: z.string().default("# === SYSTEM ==="),
 });
 const MethodSchema = z.literal("complete");
 const InputSchema = z.object({
@@ -16,7 +18,7 @@ const InputSchema = z.object({
     }),
 });
 const ChatMessageSchema = z.object({
-    role: z.enum(["user", "assistant"]),
+    role: z.enum(["user", "assistant", "system"]),
     content: z.string(),
 });
 const ChatLogSchema = z.array(ChatMessageSchema).default([]);
@@ -61,6 +63,83 @@ function parseText(text) {
     }
     return text;
 }
+// New: scan for delimiters and build chat log
+function parseChatLog(text, settings) {
+    const { delimiterPrefix, delimiterSuffix, userDelimiter, assistantDelimiter, systemDelimiter, } = settings;
+    const delimiters = [
+        {
+            role: "user",
+            delim: `${delimiterPrefix}${userDelimiter}${delimiterSuffix}`,
+        },
+        {
+            role: "assistant",
+            delim: `${delimiterPrefix}${assistantDelimiter}${delimiterSuffix}`,
+        },
+        {
+            role: "system",
+            delim: `${delimiterPrefix}${systemDelimiter}${delimiterSuffix}`,
+        },
+    ];
+    // Build a regex to match any delimiter
+    const delimRegex = new RegExp(`(${delimiters.map((d) => d.delim.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
+    // Split text into blocks and delimiters
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+    const regex = new RegExp(delimRegex, "g");
+    match = regex.exec(text);
+    while (match !== null) {
+        if (match.index > lastIndex) {
+            parts.push({ content: text.slice(lastIndex, match.index), delim: null });
+        }
+        parts.push({ content: "", delim: match[0] });
+        lastIndex = regex.lastIndex;
+        match = regex.exec(text);
+    }
+    if (lastIndex < text.length) {
+        parts.push({ content: text.slice(lastIndex), delim: null });
+    }
+    // Now, walk through parts and assign roles
+    const chatLog = [];
+    let currentRole = "user";
+    let first = true;
+    for (let i = 0; i < parts.length; i++) {
+        const { content, delim } = parts[i];
+        if (first) {
+            // If first block is empty or whitespace, and next is a system delimiter, treat as system
+            if (content.trim().length === 0 &&
+                parts[i + 1]?.delim ===
+                    `${delimiterPrefix}${systemDelimiter}${delimiterSuffix}`) {
+                currentRole = "system";
+                first = false;
+                continue;
+            }
+            // Otherwise, first block is user
+            if (content.trim().length > 0) {
+                chatLog.push({ role: "user", content: content });
+            }
+            first = false;
+            continue;
+        }
+        if (delim) {
+            // Find which role this delimiter is for
+            const found = delimiters.find((d) => d.delim === delim);
+            if (found) {
+                currentRole = found.role;
+            }
+            // Next part (if any) is the content for this role
+            if (parts[i + 1] &&
+                parts[i + 1].content.trim().length > 0) {
+                chatLog.push({
+                    role: currentRole,
+                    content: parts[i + 1]
+                        .content,
+                });
+            }
+        }
+    }
+    return chatLog;
+}
 export async function generateChatCompletionStream({ messages, }) {
     if (!process.env.XAI_API_KEY) {
         throw new Error("XAI_API_KEY environment variable is not set.");
@@ -88,27 +167,13 @@ rl.on("line", async (line) => {
     const { method, params } = parsed.data;
     if (method === "complete") {
         const { text } = params;
-        // now, to get settings, the markdown input may have toml or yaml front
-        // matter. toml is preferred. toml starts with '+++' and yaml starts with
-        // '---'.
         const settings = getSettingsFromFrontMatter(text);
-        const delimiter = settings.delimiter;
-        const delimiterPrefix = settings.delimiterPrefix;
-        const delimiterSuffix = settings.delimiterSuffix;
-        const fullDelimiter = `${delimiterPrefix}${delimiter}${delimiterSuffix}`;
         const parsedText = parseText(text);
         if (!parsedText) {
             console.error("No text provided after front matter.");
             return;
         }
-        const arrText = parsedText.split(fullDelimiter).filter((s) => s.length > 0);
-        // first message is always from the user. then, alternate user/assistant
-        const chatLog = arrText.map((s, index) => {
-            return {
-                role: index % 2 === 0 ? "user" : "assistant",
-                content: s,
-            };
-        });
+        const chatLog = parseChatLog(parsedText, settings);
         // confirm that last message is from the user and it is not empty
         if (chatLog.length === 0 ||
             chatLog[chatLog.length - 1]?.role !== "user" ||
@@ -116,7 +181,8 @@ rl.on("line", async (line) => {
             console.error("Last message must be from the user and cannot be empty.");
             return;
         }
-        process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
+        // Output the delimiter for streaming
+        process.stdout.write(`${JSON.stringify({ chunk: settings.delimiterPrefix + settings.assistantDelimiter + settings.delimiterSuffix })}\n`);
         try {
             const stream = await generateChatCompletionStream({
                 messages: chatLog,
@@ -133,7 +199,7 @@ rl.on("line", async (line) => {
             console.error("Error generating chat completion:", error);
             return;
         }
-        process.stdout.write(`${JSON.stringify({ chunk: fullDelimiter })}\n`);
+        process.stdout.write(`${JSON.stringify({ chunk: settings.delimiterPrefix + settings.userDelimiter + settings.delimiterSuffix })}\n`);
     }
     else {
         console.error("Unsupported method:", method);
