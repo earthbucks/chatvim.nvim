@@ -1,11 +1,11 @@
 # ChatVim
 
-Complete markdown documents using advanced AI models.
+**Complete markdown documents using advanced AI models.**
 
-Unlike many other neovim AI plugins, ChatVim uses a plain markdown document as
-the chat window. No special dialogs or UI elements are required.
+Unlike many other neovim AI plugins, **ChatVim uses a plain markdown document as
+the chat window**. No special dialogs or UI elements are required.
 
-Currently, only supports Grok.
+Currently, only supports Grok. More models will be added in the future.
 
 ## Features
 
@@ -26,6 +26,11 @@ using delimiters in the markdown document. The default delimiters are:
 
 You can customize these delimiters in the markdown front matter, explained
 below.
+
+If no delimiter is used (as is the case for most markdown documents), then the
+entire markdown document is treated as user input, and the AI model will respond
+to it as if it were a single user message. Delimiters will be added with the
+first response.
 
 ## Installation
 
