@@ -2,6 +2,9 @@
 
 Complete markdown documents using advanced AI models.
 
+Unlike many other neovim AI plugins, ChatVim uses a plain markdown document as
+the chat window. No special dialogs or UI elements are required.
+
 Currently, only supports Grok.
 
 ## Features
@@ -13,9 +16,9 @@ You can save, copy, fork, version, and share the markdown document as you would
 with any other markdown file. This is easier for some workflows than using a
 separate chat interface.
 
-Because ChatVim uses chat completion models, there must be some way to separate
-user messages, assistant messages, and system messages. This is done using
-delimiters in the markdown document. The default delimiters are:
+Because ChatVim uses chat completion AI models, there must be some way to
+separate user messages, assistant messages, and system messages. This is done
+using delimiters in the markdown document. The default delimiters are:
 
 - `# === USER ===` for user messages
 - `# === ASSISTANT ===` for assistant messages
