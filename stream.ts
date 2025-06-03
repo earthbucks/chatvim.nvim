@@ -226,6 +226,11 @@ rl.on("line", async (line: string) => {
       `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.assistantDelimiter + settings.delimiterSuffix })}\n`,
     );
 
+    if (!process.env.XAI_API_KEY) {
+      console.error("XAI_API_KEY environment variable is not set.");
+      return;
+    }
+
     try {
       const stream = await generateChatCompletionStream({
         messages: chatLog,
