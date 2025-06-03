@@ -76,6 +76,12 @@ systemDelimiter = "# === SYSTEM ==="
 
 All fields are optional.
 
+## Example
+
+See the [example markdown document](example.md) for a complete example of how to
+use ChatVim. The example document includes user messages, assistant messages,
+and system messages, as well as the front matter configuration.
+
 ## License
 
 MIT license. See [LICENSE](LICENSE).
