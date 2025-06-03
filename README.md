@@ -1,6 +1,6 @@
 # ChatVim
 
-**Complete markdown documents using advanced AI models.**
+**AI text completions for markdown files in NeoVim.**
 
 Unlike many other neovim AI plugins, **ChatVim uses a plain markdown document as
 the chat window**. No special dialogs or UI elements are required.
@@ -13,7 +13,7 @@ https://github.com/user-attachments/assets/7fe523e8-b953-4307-ac62-df58884bdfd0
 
 ## Features
 
-The purpose of ChatVim is to treat markdown documents as a conversation with an
+The purpose of ChatVim is to treat a markdown document as a conversation with an
 AI assistant instead of using a separate chat window or dialog box.
 
 You can save, copy, fork, version, and share the markdown document as you would
@@ -38,11 +38,11 @@ first response.
 
 ## Installation
 
-You must first install node.js v22+.
+You must install node.js v22+.
 
-Set `XAI_API_KEY` environment variable to your xAI API key.
+You must also set `XAI_API_KEY` environment variable to your xAI API key.
 
-Install with LazyVim:
+Then, install with LazyVim:
 
 ```lua
   {
@@ -52,6 +52,18 @@ Install with LazyVim:
       require("chatvim")
     end,
   },
+```
+
+Or with Packer:
+
+```lua
+  use {
+    "chatvim/chatvim.nvim",
+    run = "npm install",
+    config = function()
+      require("chatvim")
+    end,
+  }
 ```
 
 ## Commands
