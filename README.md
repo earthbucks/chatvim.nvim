@@ -41,10 +41,13 @@ Set `XAI_API_KEY` environment variable to your xAI API key.
 Install with LazyVim:
 
 ```lua
-{
-  "chatvim/chatvim.nvim",
-  build = "npm install",
-}
+  {
+    "chatvim/chatvim.nvim",
+    build = "npm install",
+    config = function()
+      require("chatvim")
+    end,
+  },
 ```
 
 ## Commands
