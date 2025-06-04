@@ -7,6 +7,11 @@ local spinner = {
   timer = nil,
 }
 
+-- Store job_id and session globally to allow stopping
+local current_job_id = nil
+local current_session = nil
+local original_filetype = nil
+
 local function update_spinner()
   if not spinner.active or not spinner.buf or not spinner.win then
     return
@@ -137,10 +142,18 @@ function M.complete_text()
     return
   end
 
+  -- If a job is already running, stop it before starting a new one
+  if current_job_id then
+    vim.api.nvim_echo({ { "[Warning: Stopping existing completion process]", "WarningMsg" } }, false, {})
+    vim.fn.jobstop(current_job_id)
+    -- Cleanup will happen via on_exit or ChatVimStop
+  end
+
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local orig_last_line = lines[#lines] or ""
   local orig_line_count = #lines
   local session = CompletionSession:new(bufnr, orig_last_line, orig_line_count)
+  current_session = session -- Store session for potential cleanup
 
   local function on_stdout(_, data, _)
     for _, line in ipairs(data) do
@@ -162,7 +175,6 @@ function M.complete_text()
   end
 
   -- Disable syntax highlighting to avoid lag during streaming
-  local original_filetype = nil
   original_filetype = vim.bo.filetype
   vim.bo.filetype = "" -- Disable filetype to prevent syntax highlighting
 
@@ -180,6 +192,9 @@ function M.complete_text()
     vim.bo.filetype = original_filetype
 
     close_spinner_window()
+    -- Clear stored job_id and session as process has ended
+    current_job_id = nil
+    current_session = nil
     if code ~= 0 then
       vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
     end
@@ -223,8 +238,13 @@ function M.complete_text()
     vim.bo.filetype = original_filetype
 
     close_spinner_window()
+    current_job_id = nil
+    current_session = nil
     return
   end
+
+  -- Store the job_id for stopping later
+  current_job_id = job_id
 
   local payload = {
     method = "complete",
@@ -233,8 +253,45 @@ function M.complete_text()
   vim.fn.chansend(job_id, vim.fn.json_encode(payload) .. "\n")
 end
 
+function M.stop_completion()
+  if not current_job_id then
+    vim.api.nvim_echo({ { "[Info: No completion process running]", "Normal" } }, false, {})
+    return
+  end
+
+  -- Stop the running job
+  vim.fn.jobstop(current_job_id)
+  vim.api.nvim_echo({ { "[Info: Completion process stopped]", "Normal" } }, false, {})
+
+  -- Finalize the session if it exists
+  if current_session then
+    current_session:finalize()
+    current_session = nil
+  end
+
+  -- Cleanup spinner and timer
+  spinner.active = false
+  if spinner.timer then
+    spinner.timer:stop()
+    spinner.timer = nil
+  end
+  close_spinner_window()
+
+  -- Restore syntax highlighting
+  if original_filetype then
+    vim.bo.filetype = original_filetype
+  end
+
+  -- Clear stored job_id
+  current_job_id = nil
+end
+
 vim.api.nvim_create_user_command("ChatVimComplete", function()
   require("chatvim").complete_text()
+end, {})
+
+vim.api.nvim_create_user_command("ChatVimStop", function()
+  require("chatvim").stop_completion()
 end, {})
 
 return M
