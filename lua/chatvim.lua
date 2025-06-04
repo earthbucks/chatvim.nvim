@@ -156,22 +156,26 @@ function M.complete_text()
   current_session = session -- Store session for potential cleanup
 
   local function on_stdout(_, data, _)
-    for _, line in ipairs(data) do
-      if line ~= "" then
-        local ok, msg = pcall(vim.fn.json_decode, line)
-        if ok and msg.chunk then
-          session.partial = session:append_chunk(msg.chunk)
+    vim.schedule(function()
+      for _, line in ipairs(data) do
+        if line ~= "" then
+          local ok, msg = pcall(vim.fn.json_decode, line)
+          if ok and msg.chunk then
+            session.partial = session:append_chunk(msg.chunk)
+          end
         end
       end
-    end
+    end)
   end
 
   local function on_stderr(_, data, _)
-    for _, line in ipairs(data) do
-      if line ~= "" then
-        vim.api.nvim_echo({ { "[Error] " .. line, "ErrorMsg" } }, false, {})
+    vim.schedule(function()
+      for _, line in ipairs(data) do
+        if line ~= "" then
+          vim.api.nvim_echo({ { "[Error] " .. line, "ErrorMsg" } }, false, {})
+        end
       end
-    end
+    end)
   end
 
   -- Disable syntax highlighting to avoid lag during streaming
@@ -182,22 +186,21 @@ function M.complete_text()
   open_spinner_window()
 
   local function on_exit(_, code, _)
-    session:finalize()
-    spinner.active = false
-    if spinner.timer then
-      spinner.timer:stop()
-      spinner.timer = nil
-    end
-    -- Re-enable syntax highlighting after the process ends
-    vim.bo.filetype = original_filetype
-
-    close_spinner_window()
-    -- Clear stored job_id and session as process has ended
-    current_job_id = nil
-    current_session = nil
-    if code ~= 0 then
-      vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
-    end
+    vim.schedule(function()
+      session:finalize()
+      spinner.active = false
+      if spinner.timer then
+        spinner.timer:stop()
+        spinner.timer = nil
+      end
+      vim.bo.filetype = original_filetype
+      close_spinner_window()
+      current_job_id = nil
+      current_session = nil
+      if code ~= 0 then
+        vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
+      end
+    end)
   end
 
   -- Start a timer to animate the spinner
