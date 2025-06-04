@@ -15,14 +15,18 @@ function M.complete_text()
   end
 
   function CompletionSession:append_chunk(chunk)
-    local lines = vim.split(chunk, "\n", { plain = true })
-    local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
+    self.partial = self.partial .. chunk
+    local lines = vim.split(self.partial, "\n", { plain = true })
 
-    if #lines == 1 then
-      vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
-      return lines[1]
+    -- If there's no newline and this isn't the final chunk, keep buffering
+    if #lines == 1 and not self.is_final then
+      return self.partial
     end
 
+    -- We have at least one complete line or this is the final chunk
+    local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
+
+    -- Handle the first chunk specially if needed
     if
       self.first_chunk
       and self.orig_last_line ~= ""
@@ -40,6 +44,7 @@ function M.complete_text()
       vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
     end
 
+    -- Append any additional complete lines
     if #lines > 2 then
       vim.api.nvim_buf_set_lines(
         self.bufnr,
@@ -50,20 +55,35 @@ function M.complete_text()
       )
     end
 
-    vim.api.nvim_buf_set_lines(
-      self.bufnr,
-      last_line_num + (#lines - 1),
-      last_line_num + (#lines - 1) + 1,
-      false,
-      { lines[#lines] }
-    )
+    -- Keep the last (potentially incomplete) line in the buffer if there are more chunks expected
+    self.partial = lines[#lines]
+    if #lines > 1 then
+      vim.api.nvim_buf_set_lines(
+        self.bufnr,
+        last_line_num + (#lines - 1),
+        last_line_num + (#lines - 1) + 1,
+        false,
+        { self.partial }
+      )
+    end
 
     -- Scroll to the last line to ensure new data is visible
     local win = vim.api.nvim_get_current_win()
     local last_line = vim.api.nvim_buf_line_count(self.bufnr)
     vim.api.nvim_win_set_cursor(win, { last_line, 0 })
 
-    return lines[#lines]
+    self.first_chunk = false
+    return self.partial
+  end
+
+  function CompletionSession:finalize()
+    -- Write any remaining buffered content when the process ends
+    if self.partial ~= "" then
+      local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
+      vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { self.partial })
+      self.partial = ""
+    end
+    vim.api.nvim_echo({ { "[Streaming complete]", "Normal" } }, false, {})
   end
 
   local bufnr = vim.api.nvim_get_current_buf()
@@ -82,16 +102,7 @@ function M.complete_text()
       if line ~= "" then
         local ok, msg = pcall(vim.fn.json_decode, line)
         if ok and msg.chunk then
-          session.partial = session.partial .. msg.chunk
-          session.partial = session:append_chunk(session.partial)
-          session.first_chunk = false
-        elseif ok and msg.done then
-          if session.partial ~= "" then
-            local last_line_num = vim.api.nvim_buf_line_count(session.bufnr) - 1
-            vim.api.nvim_buf_set_lines(session.bufnr, last_line_num, last_line_num + 1, false, { session.partial })
-            session.partial = ""
-          end
-          vim.api.nvim_echo({ { "[Streaming complete]", "Normal" } }, false, {})
+          session.partial = session:append_chunk(msg.chunk)
         end
       end
     end
@@ -105,12 +116,21 @@ function M.complete_text()
     end
   end
 
+  local function on_exit(_, code, _)
+    -- Finalize the session when the process exits
+    session:finalize()
+    if code ~= 0 then
+      vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
+    end
+  end
+
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
   local stream_js_path = plugin_dir .. "../stream.js"
 
   local job_id = vim.fn.jobstart({ "node", stream_js_path }, {
     on_stdout = on_stdout,
     on_stderr = on_stderr,
+    on_exit = on_exit,
     stdout_buffered = false,
   })
 
