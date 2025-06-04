@@ -1,6 +1,8 @@
 # Changelog
 
 
+- v0.0.5:
+  - Include timeouts in js code to make hanging less likely.
 - v0.0.4:
   - Add ":ChatVimStop" command to stop streaming.
 - v0.0.3:
