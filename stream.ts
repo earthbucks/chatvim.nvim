@@ -253,6 +253,7 @@ rl.on("line", async (line: string) => {
     process.stdout.write(
       `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.userDelimiter + settings.delimiterSuffix })}\n`,
     );
+    process.exit(0);
   } else {
     console.error("Unsupported method:", method);
     return;
