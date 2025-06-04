@@ -166,6 +166,22 @@ function parseChatLog(text: string, settings: z.infer<typeof SettingsSchema>) {
   return chatLog;
 }
 
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("Timeout")), ms);
+    promise.then(
+      (val) => {
+        clearTimeout(timer);
+        resolve(val);
+      },
+      (err) => {
+        clearTimeout(timer);
+        reject(err);
+      },
+    );
+  });
+}
+
 export async function generateChatCompletionStream({
   messages,
 }: {
@@ -179,13 +195,21 @@ export async function generateChatCompletionStream({
     baseURL: "https://api.x.ai/v1",
   });
 
-  const stream = await aiApiXAI.chat.completions.create({
-    model: "grok-3-beta",
-    messages,
-    max_tokens: undefined,
-    stream: true,
-  });
-  return stream;
+  try {
+    const stream = await withTimeout(
+      aiApiXAI.chat.completions.create({
+        model: "grok-3-beta",
+        messages,
+        max_tokens: undefined,
+        stream: true,
+      }),
+      30_000, // 30 seconds timeout
+    );
+    return stream;
+  } catch (error) {
+    console.error("Error generating chat completion:", error);
+    throw error;
+  }
 }
 
 const rl = readline.createInterface({ input: process.stdin });
@@ -236,14 +260,34 @@ rl.on("line", async (line: string) => {
         messages: chatLog,
       });
 
-      for await (const chunk of stream) {
-        if (chunk.choices[0]?.delta.content) {
-          process.stdout.write(
-            `${JSON.stringify({
-              chunk: chunk.choices[0].delta.content,
-            })}\n`,
-          );
+      async function* withStreamTimeout<T>(
+        stream: AsyncIterable<T>,
+        ms: number,
+      ): AsyncIterable<T> {
+        for await (const chunkPromise of stream) {
+          yield await Promise.race([
+            Promise.resolve(chunkPromise),
+            new Promise<T>((_, reject) =>
+              setTimeout(() => reject(new Error("Chunk timeout")), ms),
+            ),
+          ]);
         }
+      }
+
+      try {
+        // 15s timeout per chunk
+        for await (const chunk of withStreamTimeout(stream, 15000)) {
+          if (chunk.choices[0]?.delta.content) {
+            process.stdout.write(
+              `${JSON.stringify({
+                chunk: chunk.choices[0].delta.content,
+              })}\n`,
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Chunk timeout error:", error);
+        return;
       }
     } catch (error) {
       console.error("Error generating chat completion:", error);
