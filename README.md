@@ -81,6 +81,7 @@ Add these shortcuts to your nvim configuration to make it easier to use ChatVim.
 
 ```lua
 vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", opts)
 ```
 
 ## Configuration

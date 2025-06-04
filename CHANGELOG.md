@@ -1,6 +1,8 @@
 # Changelog
 
 
+- v0.0.4:
+  - Add ":ChatVimStop" command to stop streaming.
 - v0.0.3:
   - Write one chunk at a time, but ...
   - Disable syntax highlighting while streaming to prevent lag.
