@@ -161,6 +161,9 @@ function M.complete_text()
     end
   end
 
+  -- Disable syntax highlighting to avoid lag during streaming
+  vim.cmd("syntax off")
+
   spinner.active = true
   open_spinner_window()
 
@@ -171,6 +174,8 @@ function M.complete_text()
       spinner.timer:stop()
       spinner.timer = nil
     end
+    -- Re-enable syntax highlighting after the process ends
+    vim.cmd("syntax on")
     close_spinner_window()
     if code ~= 0 then
       vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
@@ -211,6 +216,8 @@ function M.complete_text()
       spinner.timer:stop()
       spinner.timer = nil
     end
+    -- Re-enable syntax highlighting after the process ends
+    vim.cmd("syntax on")
     close_spinner_window()
     return
   end
