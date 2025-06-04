@@ -4,6 +4,7 @@ local spinner = {
   active = false,
   buf = nil,
   win = nil,
+  timer = nil,
 }
 
 local function update_spinner()
@@ -64,19 +65,24 @@ function M.complete_text()
       orig_line_count = orig_line_count,
       first_chunk = true,
       partial = "",
+      chunk_buffer = "", -- Buffer to accumulate chunks
+      flush_timer = nil, -- Timer for flushing chunks
     }, self)
   end
 
   function CompletionSession:append_chunk(chunk)
-    self.partial = self.partial .. chunk
-    local lines = vim.split(self.partial, "\n", { plain = true })
+    -- Accumulate chunks in the buffer
+    self.chunk_buffer = self.chunk_buffer .. chunk
+    return self.chunk_buffer
+  end
 
-    -- If there's no newline and this isn't the final chunk, keep buffering
-    if #lines == 1 and not self.is_final then
-      return self.partial
+  function CompletionSession:flush_chunks()
+    if self.chunk_buffer == "" then
+      return
     end
 
-    -- We have at least one complete line or this is the final chunk
+    self.partial = self.partial .. self.chunk_buffer
+    local lines = vim.split(self.partial, "\n", { plain = true })
     local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
 
     -- Handle the first chunk specially if needed
@@ -108,7 +114,7 @@ function M.complete_text()
       )
     end
 
-    -- Keep the last (potentially incomplete) line in the buffer if there are more chunks expected
+    -- Keep the last (potentially incomplete) line in the buffer
     self.partial = lines[#lines]
     if #lines > 1 then
       vim.api.nvim_buf_set_lines(
@@ -126,15 +132,23 @@ function M.complete_text()
     vim.api.nvim_win_set_cursor(win, { last_line, 0 })
 
     self.first_chunk = false
-    return self.partial
+    self.chunk_buffer = "" -- Reset the chunk buffer after flushing
   end
 
   function CompletionSession:finalize()
     -- Write any remaining buffered content when the process ends
+    if self.chunk_buffer ~= "" then
+      self.partial = self.partial .. self.chunk_buffer
+      self.chunk_buffer = ""
+    end
     if self.partial ~= "" then
       local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
       vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { self.partial })
       self.partial = ""
+    end
+    if self.flush_timer then
+      self.flush_timer:stop()
+      self.flush_timer = nil
     end
     vim.api.nvim_echo({ { "[Streaming complete]", "Normal" } }, false, {})
   end
@@ -155,7 +169,7 @@ function M.complete_text()
       if line ~= "" then
         local ok, msg = pcall(vim.fn.json_decode, line)
         if ok and msg.chunk then
-          session.partial = session:append_chunk(msg.chunk)
+          session:append_chunk(msg.chunk)
         end
       end
     end
@@ -175,23 +189,46 @@ function M.complete_text()
   local function on_exit(_, code, _)
     session:finalize()
     spinner.active = false
+    if spinner.timer then
+      spinner.timer:stop()
+      spinner.timer = nil
+    end
     close_spinner_window()
-    vim.api.nvim_echo({ { "[Streaming complete]", "Normal" } }, false, {})
     if code ~= 0 then
       vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
     end
   end
 
   -- Start a timer to animate the spinner
-  local timer = vim.loop.new_timer()
-  timer:start(
+  spinner.timer = vim.loop.new_timer()
+  spinner.timer:start(
     0,
     80,
     vim.schedule_wrap(function()
       if spinner.active then
         update_spinner()
       else
-        timer:stop()
+        if spinner.timer then
+          spinner.timer:stop()
+          spinner.timer = nil
+        end
+      end
+    end)
+  )
+
+  -- Start a timer to flush chunks every 100ms
+  session.flush_timer = vim.loop.new_timer()
+  session.flush_timer:start(
+    0,
+    100,
+    vim.schedule_wrap(function()
+      if spinner.active then
+        session:flush_chunks()
+      else
+        if session.flush_timer then
+          session.flush_timer:stop()
+          session.flush_timer = nil
+        end
       end
     end)
   )
@@ -205,6 +242,21 @@ function M.complete_text()
     on_exit = on_exit,
     stdout_buffered = false,
   })
+
+  if job_id <= 0 then
+    vim.api.nvim_echo({ { "[Error: Failed to start job]", "ErrorMsg" } }, false, {})
+    spinner.active = false
+    if spinner.timer then
+      spinner.timer:stop()
+      spinner.timer = nil
+    end
+    if session.flush_timer then
+      session.flush_timer:stop()
+      session.flush_timer = nil
+    end
+    close_spinner_window()
+    return
+  end
 
   local payload = {
     method = "complete",
