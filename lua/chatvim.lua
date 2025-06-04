@@ -11,7 +11,7 @@ local function update_spinner()
     return
   end
   spinner.index = spinner.index % #spinner.frames + 1
-  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "LLMing... " .. spinner.frames[spinner.index] })
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Computing... " .. spinner.frames[spinner.index] })
 end
 
 local function open_spinner_window()
@@ -21,13 +21,13 @@ local function open_spinner_window()
   local height = win_config.height or vim.api.nvim_win_get_height(win)
 
   -- Calculate center position
-  local spinner_width = 12 -- Width of the spinner window
+  local spinner_width = 15 -- Width of the spinner window
   local spinner_height = 1 -- Height of the spinner window
   local col = math.floor((width - spinner_width) / 2) -- Center horizontally
   local row = math.floor((height - spinner_height) / 2) -- Center vertically
 
   spinner.buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "LLMing... " .. spinner.frames[1] })
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Computing... " .. spinner.frames[1] })
   spinner.win = vim.api.nvim_open_win(spinner.buf, false, {
     relative = "win", -- Position relative to the current window
     win = win, -- Specify the current window
