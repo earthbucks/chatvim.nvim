@@ -1,9 +1,19 @@
 local spinner = {
   frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+  index = 1,
   active = false,
   buf = nil,
   win = nil,
+  timer = nil,
 }
+
+local function update_spinner()
+  if not spinner.active or not spinner.buf or not spinner.win then
+    return
+  end
+  spinner.index = spinner.index % #spinner.frames + 1
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Computing... " .. spinner.frames[spinner.index] })
+end
 
 local function open_spinner_window()
   local win = vim.api.nvim_get_current_win() -- Get the current window
@@ -157,11 +167,32 @@ function M.complete_text()
   local function on_exit(_, code, _)
     session:finalize()
     spinner.active = false
+    if spinner.timer then
+      spinner.timer:stop()
+      spinner.timer = nil
+    end
     close_spinner_window()
     if code ~= 0 then
       vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
     end
   end
+
+  -- Start a timer to animate the spinner
+  spinner.timer = vim.loop.new_timer()
+  spinner.timer:start(
+    0,
+    80,
+    vim.schedule_wrap(function()
+      if spinner.active then
+        update_spinner()
+      else
+        if spinner.timer then
+          spinner.timer:stop()
+          spinner.timer = nil
+        end
+      end
+    end)
+  )
 
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
   local stream_js_path = plugin_dir .. "../stream.js"
@@ -176,6 +207,10 @@ function M.complete_text()
   if job_id <= 0 then
     vim.api.nvim_echo({ { "[Error: Failed to start job]", "ErrorMsg" } }, false, {})
     spinner.active = false
+    if spinner.timer then
+      spinner.timer:stop()
+      spinner.timer = nil
+    end
     close_spinner_window()
     return
   end
