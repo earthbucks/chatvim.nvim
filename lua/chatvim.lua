@@ -1,3 +1,44 @@
+local spinner = {
+  frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+  index = 1,
+  active = false,
+  buf = nil,
+  win = nil,
+}
+
+local function update_spinner()
+  if not spinner.active or not spinner.buf or not spinner.win then
+    return
+  end
+  spinner.index = spinner.index % #spinner.frames + 1
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Processing " .. spinner.frames[spinner.index] })
+end
+
+local function open_spinner_window()
+  spinner.buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(spinner.buf, 0, -1, false, { "Processing " .. spinner.frames[1] })
+  spinner.win = vim.api.nvim_open_win(spinner.buf, false, {
+    relative = "editor",
+    width = 20,
+    height = 1,
+    col = vim.o.columns - 22,
+    row = 1,
+    style = "minimal",
+    border = "single",
+  })
+end
+
+local function close_spinner_window()
+  if spinner.win then
+    vim.api.nvim_win_close(spinner.win, true)
+    spinner.win = nil
+  end
+  if spinner.buf then
+    vim.api.nvim_buf_delete(spinner.buf, { force = true })
+    spinner.buf = nil
+  end
+end
+
 local M = {}
 
 function M.complete_text()
@@ -116,13 +157,32 @@ function M.complete_text()
     end
   end
 
+  spinner.active = true
+  open_spinner_window()
+
   local function on_exit(_, code, _)
-    -- Finalize the session when the process exits
     session:finalize()
+    spinner.active = false
+    close_spinner_window()
+    vim.api.nvim_echo({ { "[Streaming complete]", "Normal" } }, false, {})
     if code ~= 0 then
       vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
     end
   end
+
+  -- Start a timer to animate the spinner
+  local timer = vim.loop.new_timer()
+  timer:start(
+    0,
+    80,
+    vim.schedule_wrap(function()
+      if spinner.active then
+        update_spinner()
+      else
+        timer:stop()
+      end
+    end)
+  )
 
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
   local stream_js_path = plugin_dir .. "../stream.js"
