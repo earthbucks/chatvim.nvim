@@ -162,7 +162,9 @@ function M.complete_text()
   end
 
   -- Disable syntax highlighting to avoid lag during streaming
-  vim.cmd("syntax off")
+  local original_filetype = nil
+  original_filetype = vim.bo.filetype
+  vim.bo.filetype = "" -- Disable filetype to prevent syntax highlighting
 
   spinner.active = true
   open_spinner_window()
@@ -175,7 +177,8 @@ function M.complete_text()
       spinner.timer = nil
     end
     -- Re-enable syntax highlighting after the process ends
-    vim.cmd("syntax on")
+    vim.bo.filetype = original_filetype
+
     close_spinner_window()
     if code ~= 0 then
       vim.api.nvim_echo({ { "[Process exited with error code " .. code .. "]", "ErrorMsg" } }, false, {})
@@ -217,7 +220,8 @@ function M.complete_text()
       spinner.timer = nil
     end
     -- Re-enable syntax highlighting after the process ends
-    vim.cmd("syntax on")
+    vim.bo.filetype = original_filetype
+
     close_spinner_window()
     return
   end
