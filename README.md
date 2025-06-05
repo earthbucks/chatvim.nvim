@@ -1,8 +1,8 @@
 # ChatVim
 
-**AI text completions for markdown files in NeoVim.**
+**Chat with markdown files in NeoVim.**
 
-Unlike many other neovim AI plugins, **ChatVim uses a plain markdown document as
+Unlike many other NeoVim AI plugins, **ChatVim uses a plain markdown document as
 the chat window**. No special dialogs or UI elements are required.
 
 Currently, only supports Grok. More models will be added in the future.
