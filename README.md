@@ -1,6 +1,6 @@
 # ChatVim
 
-**Chat with markdown files in Neovim.**
+**AI chat with markdown files in Neovim.**
 
 Unlike many other Neovim AI plugins, **ChatVim uses a plain markdown document as
 the chat window**. No special dialogs or UI elements are required.
