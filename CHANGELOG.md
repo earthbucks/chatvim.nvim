@@ -1,5 +1,7 @@
 # Changelog
 
+- v0.0.9
+  - Support `gpt-4.1-mini`, `gpt-4.1-nano`, `o1`, `o1-mini`
 - v0.0.8
   - Support `o3` and `o3-mini` models from OpenAI.
 - v0.0.7:
