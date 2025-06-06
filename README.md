@@ -8,10 +8,12 @@ the chat window**. No special dialogs or UI elements are required.
 ## Models
 
 Models supported:
-- grok-3-beta (default) (xAI)
-- gpt-4.1 (OpenAI)
+
+- `grok-3-beta` (default) (xAI)
+- `gpt-4.1` (OpenAI)
 
 Providers supported:
+
 - xAI (Set `XAI_API_KEY` environment variable to your xAI API key)
 - OpenAI (Set `OPENAI_API_KEY` environment variable to your OpenAI API key)
 
@@ -30,7 +32,9 @@ separate chat interface.
 
 Because ChatVim uses chat completion AI models, there must be some way to
 separate user messages, assistant messages, and system messages. This is done
-using delimiters in the markdown document. The default delimiters are:
+using delimiters in the markdown document.
+
+The default delimiters are:
 
 - `# === USER ===` for user messages
 - `# === ASSISTANT ===` for assistant messages
@@ -48,7 +52,9 @@ first response.
 
 You must install node.js v22+.
 
-You must also set `XAI_API_KEY` environment variable to your xAI API key.
+You must also set at least one API key:
+- Set `XAI_API_KEY` environment variable to your xAI API key.
+- Set `OPENAI_API_KEY` environment variable to your OpenAI API key.
 
 Then, install with LazyVim:
 
