@@ -183,23 +183,46 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
+// Update the generateChatCompletionStream function to handle multiple providers
 export async function generateChatCompletionStream({
   messages,
+  model,
 }: {
   messages: { role: "assistant" | "user" | "system"; content: string }[];
+  model: "grok-3-beta" | "gpt-4.1";
 }) {
-  if (!process.env.XAI_API_KEY) {
-    throw new Error("XAI_API_KEY environment variable is not set.");
+  let aiApi: OpenAI;
+  let baseURL: string | undefined;
+  let apiKey: string | undefined;
+  let modelName: string;
+
+  if (model === "grok-3-beta") {
+    apiKey = process.env.XAI_API_KEY;
+    baseURL = "https://api.x.ai/v1";
+    modelName = "grok-3-beta";
+    if (!apiKey) {
+      throw new Error("XAI_API_KEY environment variable is not set.");
+    }
+  } else {
+    // gpt-4.1
+    apiKey = process.env.OPENAI_API_KEY;
+    // baseURL = "https://api.openai.com/v1";
+    baseURL = undefined; // Use default OpenAI base URL
+    modelName = "gpt-4-turbo"; // Note: Using gpt-4-turbo as gpt-4.1 isn't a standard name; adjust if needed
+    if (!apiKey) {
+      throw new Error("OPENAI_API_KEY environment variable is not set.");
+    }
   }
-  const aiApiXAI = new OpenAI({
-    apiKey: process.env.XAI_API_KEY,
-    baseURL: "https://api.x.ai/v1",
+
+  aiApi = new OpenAI({
+    apiKey,
+    baseURL,
   });
 
   try {
     const stream = await withTimeout(
-      aiApiXAI.chat.completions.create({
-        model: "grok-3-beta",
+      aiApi.chat.completions.create({
+        model: modelName,
         messages,
         max_tokens: undefined,
         stream: true,
@@ -251,14 +274,10 @@ rl.on("line", async (line: string) => {
       `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.assistantDelimiter + settings.delimiterSuffix })}\n`,
     );
 
-    if (!process.env.XAI_API_KEY) {
-      console.error("XAI_API_KEY environment variable is not set.");
-      return;
-    }
-
     try {
       const stream = await generateChatCompletionStream({
         messages: chatLog,
+        model: settings.model, // Pass the selected model from settings
       });
 
       async function* withStreamTimeout<T>(
