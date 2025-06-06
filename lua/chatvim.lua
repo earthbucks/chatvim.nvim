@@ -80,7 +80,7 @@ function M.complete_text()
     if not self.update_timer then
       self.update_timer = vim.loop.new_timer()
       self.update_timer:start(
-        500,
+        100,
         0,
         vim.schedule_wrap(function()
           -- Process the accumulated content
