@@ -10,6 +10,7 @@ const SettingsSchema = z.object({
   userDelimiter: z.string().default("# === USER ==="),
   assistantDelimiter: z.string().default("# === ASSISTANT ==="),
   systemDelimiter: z.string().default("# === SYSTEM ==="),
+  model: z.enum(["grok-3-beta", "gpt-4.1"]).default("grok-3-beta"),
 });
 
 const MethodSchema = z.literal("complete");
