@@ -203,15 +203,17 @@ export async function generateChatCompletionStream({
     if (!apiKey) {
       throw new Error("XAI_API_KEY environment variable is not set.");
     }
-  } else {
+  } else if (model === "gpt-4.1") {
     // gpt-4.1
     apiKey = process.env.OPENAI_API_KEY;
     // baseURL = "https://api.openai.com/v1";
     baseURL = undefined; // Use default OpenAI base URL
-    modelName = "gpt-4-turbo"; // Note: Using gpt-4-turbo as gpt-4.1 isn't a standard name; adjust if needed
+    modelName = "gpt-4.1";
     if (!apiKey) {
       throw new Error("OPENAI_API_KEY environment variable is not set.");
     }
+  } else {
+    throw new Error(`Unsupported model: ${model}`);
   }
 
   aiApi = new OpenAI({
