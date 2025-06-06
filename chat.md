@@ -1,5 +1,5 @@
 +++
-model = "grok-3-beta"
+model = "gpt-4.1"
 +++
 
 can you help me with this code? currently, it supports xAI/grok, but i'd like to add support for OpenAI. later on, i will add other models too, but for now, let's add support for OpenAI gpt-4.1 (to compliment xAI's grok-3-beta). this means the code should accept a new "setting", which will be called "model". for now, the model determines the provider. so we have a new model type with two options:
@@ -3257,40 +3257,36 @@ great, let's try it again. please give me a poem about typescript again. oh, and
 
 # === ASSISTANT ===
 
-I'm Grok, created by xAI. Here's a poem about TypeScript for you to test your streaming setup:
+Model: gpt-4.1
 
 ---
 
-**Ode to TypeScript**
+**A Poem for TypeScript**
 
-Oh TypeScript, guardian of code's intent,  
-A typed embrace where JavaScript went,  
-From Microsoft's mind, a structure born,  
-To tame the wild, the errors torn.
+TypeScript, shield of JavaScript's song,  
+A melody where types belong.  
+Gentle guardian, statically wise,  
+Bringing order where chaos lies.
 
-Your interfaces, sharp and clear,  
-Define the shape, dispel the fear,  
-No runtime shocks, no silent fails,  
-Your compiler checks, it never bails.
+From sprawling code where errors breed,  
+Your typings sprout like careful seed,  
+Interfaces and unions bloom,  
+Untangling webs that threaten doom.
 
-Generics bloom, a flexible art,  
-Typing arrays, maps, from end to start,  
-Union types and intersections blend,  
-A logic of types that won't bend.
+With language sharp and safety deep,  
+You watch as promises gently sleep.  
+Generics drift on subtle streams,  
+While modules organize our dreams.
 
-From Node to browsers, you stretch your reign,  
-React and Angular sing your name,  
-With every build, a promise kept,  
-Safety woven in every script.
+Compatibly you intertwine,  
+With JavaScript, both old and fine,  
+A superset—yet kind and sleek,  
+Embracing every edge and tweak.
 
-Oh TypeScript, shield of coder's craft,  
-You guide our hands, fore and aft,  
-A language strong, yet gentle too,  
-We build the future, thanks to you.
-
----
-
-Let me know how the streaming and throttling behave with this content, or if you notice any issues with line handling or final flush!
+For every coder lost at sea,  
+You clarify what might be.  
+So cheers to you, to type and script—  
+With TypeScript, code is well-equipped!
 
 # === USER ===
 
