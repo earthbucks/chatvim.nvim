@@ -193,7 +193,7 @@ export async function generateChatCompletionStream({
   model,
 }: {
   messages: { role: "assistant" | "user" | "system"; content: string }[];
-  model: "grok-3-beta" | "gpt-4.1";
+  model: z.infer<typeof ModelsSchema>;
 }) {
   let aiApi: OpenAI;
   let baseURL: string | undefined;
@@ -207,7 +207,7 @@ export async function generateChatCompletionStream({
     if (!apiKey) {
       throw new Error("XAI_API_KEY environment variable is not set.");
     }
-  } else if (model === "gpt-4.1") {
+  } else {
     // gpt-4.1
     apiKey = process.env.OPENAI_API_KEY;
     // baseURL = "https://api.openai.com/v1";
@@ -216,9 +216,10 @@ export async function generateChatCompletionStream({
     if (!apiKey) {
       throw new Error("OPENAI_API_KEY environment variable is not set.");
     }
-  } else {
-    throw new Error(`Unsupported model: ${model}`);
   }
+  // else {
+  //   throw new Error(`Unsupported model: ${model}`);
+  // }
 
   aiApi = new OpenAI({
     apiKey,

@@ -109,7 +109,7 @@ document, before any content. The front matter should look like this:
 
 ```markdown
 +++
-model = "grok-3-beta"  # or "gpt-4.1"
+model = "grok-3-beta"  # or "gpt-4.1", etc.
 delimiterPrefix = "\n\n"
 delimiterSuffix = "\n\n"
 userDelimiter = "# === USER ==="
