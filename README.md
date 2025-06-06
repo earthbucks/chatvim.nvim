@@ -59,7 +59,6 @@ first response.
 You must install node.js v22+.
 
 You must also set at least one API key:
-
 - Set `XAI_API_KEY` environment variable to your xAI API key.
 - Set `OPENAI_API_KEY` environment variable to your OpenAI API key.
 
@@ -102,8 +101,9 @@ present, it will treat the input as user input and append a response.
 Add these shortcuts to your nvim configuration to make it easier to use ChatVim.
 
 ```lua
-vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", { noremap = true, silent = true })
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", opts)
 ```
 
 ## Configuration
