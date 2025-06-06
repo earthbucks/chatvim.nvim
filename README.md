@@ -5,7 +5,15 @@
 Unlike many other Neovim AI plugins, **ChatVim uses a plain markdown document as
 the chat window**. No special dialogs or UI elements are required.
 
-Currently, only supports Grok. More models will be added in the future.
+## Models
+
+Models supported:
+- grok-3-beta (default) (xAI)
+- gpt-4.1 (OpenAI)
+
+Providers supported:
+- xAI (Set `XAI_API_KEY` environment variable to your xAI API key)
+- OpenAI (Set `OPENAI_API_KEY` environment variable to your OpenAI API key)
 
 ## Video Demo
 
@@ -70,6 +78,7 @@ Or with Packer:
 
 ```vim
 :ChatVimComplete
+:ChatVimStop
 ```
 
 Completes the current markdown document using the AI model. If no delimiters are
@@ -92,6 +101,7 @@ document, before any content. The front matter should look like this:
 
 ```markdown
 +++
+model = "grok-3-beta"  # or "gpt-4.1"
 delimiterPrefix = "\n\n"
 delimiterSuffix = "\n\n"
 userDelimiter = "# === USER ==="
