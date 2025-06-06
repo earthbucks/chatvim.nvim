@@ -70,67 +70,140 @@ function M.complete_text()
       orig_line_count = orig_line_count,
       first_chunk = true,
       partial = "",
+      update_timer = nil,
     }, self)
   end
 
   function CompletionSession:append_chunk(chunk)
     self.partial = self.partial .. chunk
-    local lines = vim.split(self.partial, "\n", { plain = true })
-    local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
 
-    -- Handle the first chunk specially if needed
-    if
-      self.first_chunk
-      and self.orig_last_line ~= ""
-      and self.orig_last_line
-        == vim.api.nvim_buf_get_lines(self.bufnr, self.orig_line_count - 1, self.orig_line_count, false)[1]
-    then
-      vim.api.nvim_buf_set_lines(
-        self.bufnr,
-        self.orig_line_count - 1,
-        self.orig_line_count,
-        false,
-        { self.orig_last_line .. lines[1] }
+    -- Only schedule a buffer update if there isn't already a timer running
+    if not self.update_timer then
+      self.update_timer = vim.loop.new_timer()
+      self.update_timer:start(
+        500,
+        0,
+        vim.schedule_wrap(function()
+          -- Process the accumulated content
+          local lines = vim.split(self.partial, "\n", { plain = true })
+          local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
+
+          -- Handle the first chunk specially if needed
+          if
+            self.first_chunk
+            and self.orig_last_line ~= ""
+            and self.orig_last_line
+              == vim.api.nvim_buf_get_lines(self.bufnr, self.orig_line_count - 1, self.orig_line_count, false)[1]
+          then
+            vim.api.nvim_buf_set_lines(
+              self.bufnr,
+              self.orig_line_count - 1,
+              self.orig_line_count,
+              false,
+              { self.orig_last_line .. lines[1] }
+            )
+            self.first_chunk = false
+          else
+            vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
+          end
+
+          -- Append any additional complete lines
+          if #lines > 2 then
+            vim.api.nvim_buf_set_lines(
+              self.bufnr,
+              last_line_num + 1,
+              last_line_num + 1,
+              false,
+              { unpack(lines, 2, #lines - 1) }
+            )
+          end
+
+          -- Keep the last (potentially incomplete) line in the buffer
+          self.partial = lines[#lines]
+          vim.api.nvim_buf_set_lines(
+            self.bufnr,
+            last_line_num + (#lines - 1),
+            last_line_num + (#lines - 1) + 1,
+            false,
+            { self.partial }
+          )
+
+          -- Scroll to the last line to ensure new data is visible
+          local win = vim.api.nvim_get_current_win()
+          local last_line = vim.api.nvim_buf_line_count(self.bufnr)
+          vim.api.nvim_win_set_cursor(win, { last_line, 0 })
+
+          -- Clean up the timer
+          if self.update_timer then
+            self.update_timer:stop()
+            self.update_timer:close()
+            self.update_timer = nil
+          end
+        end)
       )
-    else
-      vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
     end
 
-    -- Append any additional complete lines
-    if #lines > 2 then
-      vim.api.nvim_buf_set_lines(
-        self.bufnr,
-        last_line_num + 1,
-        last_line_num + 1,
-        false,
-        { unpack(lines, 2, #lines - 1) }
-      )
-    end
-
-    -- Keep the last (potentially incomplete) line in the buffer
-    self.partial = lines[#lines]
-    vim.api.nvim_buf_set_lines(
-      self.bufnr,
-      last_line_num + (#lines - 1),
-      last_line_num + (#lines - 1) + 1,
-      false,
-      { self.partial }
-    )
-
-    -- Scroll to the last line to ensure new data is visible
-    local win = vim.api.nvim_get_current_win()
-    local last_line = vim.api.nvim_buf_line_count(self.bufnr)
-    vim.api.nvim_win_set_cursor(win, { last_line, 0 })
-
-    self.first_chunk = false
     return self.partial
   end
 
   function CompletionSession:finalize()
-    -- Write any remaining buffered content when the process ends
+    -- Stop any pending timer to ensure updates are applied immediately
+    if self.update_timer then
+      self.update_timer:stop()
+      self.update_timer:close()
+      self.update_timer = nil
+    end
+    -- Write any remaining buffered content when the process ends, using the same newline handling logic
     if self.partial ~= "" then
+      local lines = vim.split(self.partial, "\n", { plain = true })
       local last_line_num = vim.api.nvim_buf_line_count(self.bufnr) - 1
-      vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { self.partial })
+
+      -- Handle the first chunk specially if needed
+      if
+        self.first_chunk
+        and self.orig_last_line ~= ""
+        and self.orig_last_line
+          == vim.api.nvim_buf_get_lines(self.bufnr, self.orig_line_count - 1, self.orig_line_count, false)[1]
+      then
+        vim.api.nvim_buf_set_lines(
+          self.bufnr,
+          self.orig_line_count - 1,
+          self.orig_line_count,
+          false,
+          { self.orig_last_line .. lines[1] }
+        )
+        self.first_chunk = false
+      else
+        vim.api.nvim_buf_set_lines(self.bufnr, last_line_num, last_line_num + 1, false, { lines[1] })
+      end
+
+      -- Append any additional complete lines
+      if #lines > 2 then
+        vim.api.nvim_buf_set_lines(
+          self.bufnr,
+          last_line_num + 1,
+          last_line_num + 1,
+          false,
+          { unpack(lines, 2, #lines - 1) }
+        )
+      end
+
+      -- Keep the last (potentially incomplete) line in the buffer
+      self.partial = lines[#lines]
+      vim.api.nvim_buf_set_lines(
+        self.bufnr,
+        last_line_num + (#lines - 1),
+        last_line_num + (#lines - 1) + 1,
+        false,
+        { self.partial }
+      )
+
+      -- Scroll to the last line to ensure new data is visible
+      local win = vim.api.nvim_get_current_win()
+      local last_line = vim.api.nvim_buf_line_count(self.bufnr)
+      vim.api.nvim_win_set_cursor(win, { last_line, 0 })
+
+      -- Reset partial after finalizing
       self.partial = ""
     end
     vim.api.nvim_echo({ { "[Streaming complete]", "Normal" } }, false, {})
