@@ -1,6 +1,7 @@
 # Changelog
 
-
+- v0.0.7:
+  - Overhaul streaming to buffer every 500ms, fixing laggy updates.
 - v0.0.6:
   - Support gpt-4.1 from OpenAI.
   - Use promises-based API instead of callback-based API for readline.
