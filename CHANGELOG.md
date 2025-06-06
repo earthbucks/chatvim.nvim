@@ -1,10 +1,12 @@
 # Changelog
 
+- v0.0.8
+  - Support `o3` and `o3-mini` models from OpenAI.
 - v0.0.7:
   - Overhaul streaming to buffer every 500ms, fixing laggy updates.
   - Re-enable syntax highlighting during streaming.
 - v0.0.6:
-  - Support gpt-4.1 from OpenAI.
+  - Support `gpt-4.1` from OpenAI.
   - Use promises-based API instead of callback-based API for readline.
 - v0.0.5:
   - Include timeouts in js code to make hanging less likely.
