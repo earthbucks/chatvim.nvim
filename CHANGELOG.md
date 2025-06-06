@@ -1,6 +1,9 @@
 # Changelog
 
 
+- v0.0.6:
+  - Support gpt-4.1 from OpenAI.
+  - Use promises-based API instead of callback-based API for readline.
 - v0.0.5:
   - Include timeouts in js code to make hanging less likely.
 - v0.0.4:
