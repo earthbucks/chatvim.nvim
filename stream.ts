@@ -1,4 +1,4 @@
-import * as readline from "readline";
+import * as readline from "node:readline/promises";
 import z from "zod/v4";
 import * as TOML from "@iarna/toml";
 import YAML from "yaml";
@@ -238,90 +238,109 @@ export async function generateChatCompletionStream({
   }
 }
 
-const rl = readline.createInterface({ input: process.stdin });
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-rl.on("line", async (line: string) => {
-  const req = JSON.parse(line);
-  const parsed = InputSchema.safeParse(req);
-  if (!parsed.success) {
-    console.error("Invalid input:", parsed.error);
-    return;
-  }
-  const { method, params } = parsed.data;
-  if (method === "complete") {
-    const { text } = params;
+async function main() {
+  for await (const line of rl) {
+    if (!line.trim()) {
+      continue;
+    } // ignore empty input
 
-    const settings = getSettingsFromFrontMatter(text);
-
-    const parsedText = parseText(text);
-    if (!parsedText) {
-      console.error("No text provided after front matter.");
-      return;
-    }
-
-    const chatLog = parseChatLog(parsedText, settings);
-
-    // confirm that last message is from the user and it is not empty
-    if (
-      chatLog.length === 0 ||
-      chatLog[chatLog.length - 1]?.role !== "user" ||
-      !chatLog[chatLog.length - 1]?.content
-    ) {
-      console.error("Last message must be from the user and cannot be empty.");
-      return;
-    }
-
-    // Output the delimiter for streaming
-    process.stdout.write(
-      `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.assistantDelimiter + settings.delimiterSuffix })}\n`,
-    );
-
+    let req: unknown;
     try {
-      const stream = await generateChatCompletionStream({
-        messages: chatLog,
-        model: settings.model, // Pass the selected model from settings
-      });
+      req = JSON.parse(line);
+    } catch (e) {
+      console.error("Invalid JSON input:", e);
+      continue;
+    }
+    const parsed = InputSchema.safeParse(req);
+    if (!parsed.success) {
+      console.error("Invalid input:", parsed.error);
+      continue;
+    }
+    const { method, params } = parsed.data;
+    if (method === "complete") {
+      const { text } = params;
 
-      async function* withStreamTimeout<T>(
-        stream: AsyncIterable<T>,
-        ms: number,
-      ): AsyncIterable<T> {
-        for await (const chunkPromise of stream) {
-          yield await Promise.race([
-            Promise.resolve(chunkPromise),
-            new Promise<T>((_, reject) =>
-              setTimeout(() => reject(new Error("Chunk timeout")), ms),
-            ),
-          ]);
-        }
+      const settings = getSettingsFromFrontMatter(text);
+
+      const parsedText = parseText(text);
+      if (!parsedText) {
+        console.error("No text provided after front matter.");
+        continue;
       }
+
+      const chatLog = parseChatLog(parsedText, settings);
+
+      // confirm that last message is from the user and it is not empty
+      if (
+        chatLog.length === 0 ||
+        chatLog[chatLog.length - 1]?.role !== "user" ||
+        !chatLog[chatLog.length - 1]?.content
+      ) {
+        console.error(
+          "Last message must be from the user and cannot be empty.",
+        );
+        continue;
+      }
+
+      // Output the delimiter for streaming
+      process.stdout.write(
+        `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.assistantDelimiter + settings.delimiterSuffix })}\n`,
+      );
 
       try {
-        // 15s timeout per chunk
-        for await (const chunk of withStreamTimeout(stream, 15000)) {
-          if (chunk.choices[0]?.delta.content) {
-            process.stdout.write(
-              `${JSON.stringify({
-                chunk: chunk.choices[0].delta.content,
-              })}\n`,
-            );
+        const stream = await generateChatCompletionStream({
+          messages: chatLog,
+          model: settings.model, // Pass the selected model from settings
+        });
+
+        async function* withStreamTimeout<T>(
+          stream: AsyncIterable<T>,
+          ms: number,
+        ): AsyncIterable<T> {
+          for await (const chunkPromise of stream) {
+            yield await Promise.race([
+              Promise.resolve(chunkPromise),
+              new Promise<T>((_, reject) =>
+                setTimeout(() => reject(new Error("Chunk timeout")), ms),
+              ),
+            ]);
           }
         }
-      } catch (error) {
-        console.error("Chunk timeout error:", error);
-        return;
-      }
-    } catch (error) {
-      console.error("Error generating chat completion:", error);
-      return;
-    }
 
-    process.stdout.write(
-      `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.userDelimiter + settings.delimiterSuffix })}\n`,
-    );
-    process.exit(0);
-  } else {
-    console.error("Unsupported method:", method);
-    return;
+        try {
+          // 15s timeout per chunk
+          for await (const chunk of withStreamTimeout(stream, 15000)) {
+            if (chunk.choices[0]?.delta.content) {
+              process.stdout.write(
+                `${JSON.stringify({
+                  chunk: chunk.choices[0].delta.content,
+                })}\n`,
+              );
+            }
+          }
+        } catch (error) {
+          console.error("Chunk timeout error:", error);
+          continue;
+        }
+      } catch (error) {
+        console.error("Error generating chat completion:", error);
+        continue;
+      }
+
+      process.stdout.write(
+        `${JSON.stringify({ chunk: settings.delimiterPrefix + settings.userDelimiter + settings.delimiterSuffix })}\n`,
+      );
+      process.exit(0);
+    } else {
+      console.error("Unsupported method:", method);
+      process.exit(1);
+    }
   }
-});
+}
+
+main();
