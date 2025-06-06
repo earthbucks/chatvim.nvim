@@ -3253,4 +3253,45 @@ Feel free to use this to test your Neovim plugin's streaming and throttling beha
 
 # === USER ===
 
-great, let's try it again. please give me a poem about typescript again.
+great, let's try it again. please give me a poem about typescript again. oh, and, at the top of the poem, before it begins, please tell me what model you are.
+
+# === ASSISTANT ===
+
+I'm Grok, created by xAI. Here's a poem about TypeScript for you to test your streaming setup:
+
+---
+
+**Ode to TypeScript**
+
+Oh TypeScript, guardian of code's intent,  
+A typed embrace where JavaScript went,  
+From Microsoft's mind, a structure born,  
+To tame the wild, the errors torn.
+
+Your interfaces, sharp and clear,  
+Define the shape, dispel the fear,  
+No runtime shocks, no silent fails,  
+Your compiler checks, it never bails.
+
+Generics bloom, a flexible art,  
+Typing arrays, maps, from end to start,  
+Union types and intersections blend,  
+A logic of types that won't bend.
+
+From Node to browsers, you stretch your reign,  
+React and Angular sing your name,  
+With every build, a promise kept,  
+Safety woven in every script.
+
+Oh TypeScript, shield of coder's craft,  
+You guide our hands, fore and aft,  
+A language strong, yet gentle too,  
+We build the future, thanks to you.
+
+---
+
+Let me know how the streaming and throttling behave with this content, or if you notice any issues with line handling or final flush!
+
+# === USER ===
+
+
