@@ -4,13 +4,15 @@ import * as TOML from "@iarna/toml";
 import YAML from "yaml";
 import { OpenAI } from "openai";
 
+const ModelsSchema = z.enum(["grok-3-beta", "gpt-4.1"]).default("grok-3-beta");
+
 const SettingsSchema = z.object({
   delimiterPrefix: z.string().default("\n\n"),
   delimiterSuffix: z.string().default("\n\n"),
   userDelimiter: z.string().default("# === USER ==="),
   assistantDelimiter: z.string().default("# === ASSISTANT ==="),
   systemDelimiter: z.string().default("# === SYSTEM ==="),
-  model: z.enum(["grok-3-beta", "gpt-4.1"]).default("grok-3-beta"),
+  model: ModelsSchema,
 });
 
 const MethodSchema = z.literal("complete");
