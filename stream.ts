@@ -4,7 +4,9 @@ import * as TOML from "@iarna/toml";
 import YAML from "yaml";
 import { OpenAI } from "openai";
 
-const ModelsSchema = z.enum(["grok-3-beta", "gpt-4.1"]).default("grok-3-beta");
+const ModelsSchema = z
+  .enum(["grok-3-beta", "gpt-4.1", "o3", "o3-mini"])
+  .default("grok-3-beta");
 
 const SettingsSchema = z.object({
   delimiterPrefix: z.string().default("\n\n"),
