@@ -10,7 +10,7 @@ local spinner = {
 -- Store job_id and session globally to allow stopping
 local current_job_id = nil
 local current_session = nil
-local original_filetype = nil
+-- local original_filetype = nil
 
 local function update_spinner()
   if not spinner.active or not spinner.buf or not spinner.win then
@@ -252,8 +252,8 @@ function M.complete_text()
   end
 
   -- Disable syntax highlighting to avoid lag during streaming
-  original_filetype = vim.bo.filetype
-  vim.bo.filetype = "" -- Disable filetype to prevent syntax highlighting
+  -- original_filetype = vim.bo.filetype
+  -- vim.bo.filetype = "" -- Disable filetype to prevent syntax highlighting
 
   spinner.active = true
   open_spinner_window()
@@ -266,7 +266,7 @@ function M.complete_text()
         spinner.timer:stop()
         spinner.timer = nil
       end
-      vim.bo.filetype = original_filetype
+      -- vim.bo.filetype = original_filetype
       close_spinner_window()
       current_job_id = nil
       current_session = nil
@@ -311,7 +311,7 @@ function M.complete_text()
       spinner.timer = nil
     end
     -- Re-enable syntax highlighting after the process ends
-    vim.bo.filetype = original_filetype
+    -- vim.bo.filetype = original_filetype
 
     close_spinner_window()
     current_job_id = nil
@@ -355,7 +355,7 @@ function M.stop_completion()
 
   -- Restore syntax highlighting
   if original_filetype then
-    vim.bo.filetype = original_filetype
+    -- vim.bo.filetype = original_filetype
   end
 
   -- Clear stored job_id
