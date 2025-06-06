@@ -11,8 +11,12 @@ Models supported:
 
 - `grok-3-beta` (default) (xAI)
 - `gpt-4.1` (OpenAI)
+- `gpt-4.1-mini` (OpenAI)
+- `gpt-4.1-nano` (OpenAI)
 - `o3` (OpenAI)
 - `o3-mini` (OpenAI)
+- `o1` (OpenAI)
+- `o1-mini` (OpenAI)
 
 Providers supported:
 

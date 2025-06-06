@@ -5,7 +5,16 @@ import YAML from "yaml";
 import { OpenAI } from "openai";
 
 const ModelsSchema = z
-  .enum(["grok-3-beta", "gpt-4.1", "o3", "o3-mini"])
+  .enum([
+    "grok-3-beta",
+    "gpt-4.1",
+    "gpt-4.1-mini",
+    "gpt-4.1-nano",
+    "o3",
+    "o3-mini",
+    "o1",
+    "o1-mini",
+  ])
   .default("grok-3-beta");
 
 const SettingsSchema = z.object({
@@ -208,7 +217,6 @@ export async function generateChatCompletionStream({
       throw new Error("XAI_API_KEY environment variable is not set.");
     }
   } else {
-    // gpt-4.1
     apiKey = process.env.OPENAI_API_KEY;
     // baseURL = "https://api.openai.com/v1";
     baseURL = undefined; // Use default OpenAI base URL
@@ -217,9 +225,6 @@ export async function generateChatCompletionStream({
       throw new Error("OPENAI_API_KEY environment variable is not set.");
     }
   }
-  // else {
-  //   throw new Error(`Unsupported model: ${model}`);
-  // }
 
   aiApi = new OpenAI({
     apiKey,
