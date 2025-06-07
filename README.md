@@ -89,14 +89,14 @@ Or with Packer:
 
 ## Commands
 
-```vimscript
+```vim
 :ChatVimComplete
 ```
 
 Completes the current markdown document using the AI model. If no delimiters are
 present, it will treat the input as user input and append a response.
 
-```vimscript
+```vim
 :ChatVimStop
 ```
 
