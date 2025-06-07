@@ -59,6 +59,7 @@ first response.
 You must install node.js v22+.
 
 You must also set at least one API key:
+
 - Set `XAI_API_KEY` environment variable to your xAI API key.
 - Set `OPENAI_API_KEY` environment variable to your OpenAI API key.
 
@@ -90,11 +91,16 @@ Or with Packer:
 
 ```vim
 :ChatVimComplete
-:ChatVimStop
 ```
 
 Completes the current markdown document using the AI model. If no delimiters are
 present, it will treat the input as user input and append a response.
+
+```vim
+:ChatVimStop
+```
+
+Stops the current streaming respanse.
 
 ## Recommended Shortcuts
 
