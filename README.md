@@ -100,7 +100,7 @@ present, it will treat the input as user input and append a response.
 :ChatVimStop
 ```
 
-Stops the current streaming respanse.
+Stops the current streaming response.
 
 ## Recommended Shortcuts
 
