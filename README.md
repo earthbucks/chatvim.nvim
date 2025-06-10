@@ -9,7 +9,8 @@ the chat window**. No special dialogs or UI elements are required.
 
 Models supported:
 
-- `grok-3-beta` (default) (xAI)
+- `grok-3` (default) (xAI)
+- `grok-3-beta` (xAI)
 - `gpt-4.1` (OpenAI)
 - `gpt-4.1-mini` (OpenAI)
 - `gpt-4.1-nano` (OpenAI)
@@ -120,7 +121,7 @@ document, before any content. The front matter should look like this:
 
 ```markdown
 +++
-model = "grok-3-beta"  # or "gpt-4.1", etc.
+model = "grok-3"  # or "gpt-4.1", etc.
 delimiterPrefix = "\n\n"
 delimiterSuffix = "\n\n"
 userDelimiter = "# === USER ==="
