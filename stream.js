@@ -6,6 +6,7 @@ import { OpenAI } from "openai";
 const ModelsSchema = z
     .enum([
     "grok-3-beta",
+    "grok-3",
     "gpt-4.1",
     "gpt-4.1-mini",
     "gpt-4.1-nano",
@@ -14,7 +15,7 @@ const ModelsSchema = z
     "o1",
     "o1-mini",
 ])
-    .default("grok-3-beta");
+    .default("grok-3");
 const SettingsSchema = z.object({
     delimiterPrefix: z.string().default("\n\n"),
     delimiterSuffix: z.string().default("\n\n"),
