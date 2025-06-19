@@ -170,11 +170,9 @@ export async function generateChatCompletionStream({ messages, model, }) {
     let aiApi;
     let baseURL;
     let apiKey;
-    let modelName;
     if (model === "grok-3-beta") {
         apiKey = process.env.XAI_API_KEY;
         baseURL = "https://api.x.ai/v1";
-        modelName = "grok-3-beta";
         if (!apiKey) {
             throw new Error("XAI_API_KEY environment variable is not set.");
         }
@@ -183,7 +181,6 @@ export async function generateChatCompletionStream({ messages, model, }) {
         apiKey = process.env.OPENAI_API_KEY;
         // baseURL = "https://api.openai.com/v1";
         baseURL = undefined; // Use default OpenAI base URL
-        modelName = "gpt-4.1";
         if (!apiKey) {
             throw new Error("OPENAI_API_KEY environment variable is not set.");
         }
@@ -194,7 +191,7 @@ export async function generateChatCompletionStream({ messages, model, }) {
     });
     try {
         const stream = await withTimeout(aiApi.chat.completions.create({
-            model: modelName,
+            model,
             messages,
             max_tokens: undefined,
             stream: true,
