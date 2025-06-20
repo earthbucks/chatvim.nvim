@@ -1,5 +1,7 @@
 # Changelog
 
+- v0.1.1:
+  - Fix bug where models weren't used correctly.
 - v0.1.0
   - Support `gpt-4o`-related models from OpenAI.
 - v0.0.9
