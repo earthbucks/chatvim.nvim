@@ -19,12 +19,14 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/node": "^22.15.29",
-    "openai": "^4.96.2"
+    "@types/node": "^22.15.32",
+    "openai": "^4.104.0",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@codeybeaver/codey": "^0.0.3",
     "@iarna/toml": "^2.2.5",
     "yaml": "^2.8.0",
-    "zod": "^3.25.48"
+    "zod": "^3.25.67"
   }
 }
