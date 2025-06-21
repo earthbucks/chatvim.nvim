@@ -290,7 +290,7 @@ function M.complete_text()
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
   local stream_js_path = plugin_dir .. "../stream.js"
 
-  local job_id = vim.fn.jobstart({ "node", stream_js_path }, {
+  local job_id = vim.fn.jobstart({ "node", stream_js_path, "prompt", "--chunk", "--add-delimiters" }, {
     on_stdout = on_stdout,
     on_stderr = on_stderr,
     on_exit = on_exit,
@@ -314,11 +314,12 @@ function M.complete_text()
   -- Store the job_id for stopping later
   current_job_id = job_id
 
-  local payload = {
-    method = "complete",
-    params = { text = table.concat(lines, "\n") },
-  }
-  vim.fn.chansend(job_id, vim.fn.json_encode(payload) .. "\n")
+  -- local payload = {
+  --   method = "complete",
+  --   params = { text = table.concat(lines, "\n") },
+  -- }
+  -- vim.fn.chansend(job_id, vim.fn.json_encode(payload) .. "\n")
+  vim.fn.chansend(job_id, table.concat(lines, "\n"))
   vim.fn.chanclose(job_id, "stdin")
 end
 
