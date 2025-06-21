@@ -319,6 +319,7 @@ function M.complete_text()
     params = { text = table.concat(lines, "\n") },
   }
   vim.fn.chansend(job_id, vim.fn.json_encode(payload) .. "\n")
+  vim.fn.chanclose(job_id, "stdin")
 end
 
 function M.stop_completion()
