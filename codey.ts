@@ -1,2 +1,2 @@
 import { program } from "@codeybeaver/codey";
-program.parse();
+program.parse(process.argv);
