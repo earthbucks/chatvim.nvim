@@ -5,36 +5,16 @@
 Unlike many other Neovim AI plugins, **ChatVim uses a plain markdown document as
 the chat window**. No special dialogs or UI elements are required.
 
-## Models
-
-Models supported:
-
-- `claude-sonnet-4-0` (Anthropic)
-- `claude-opus-4-0` (Anthropic)
-- `claude-3-7-sonnet-latest` (Anthropic)
-- `claude-3-5-sonnet-latest` (Anthropic)
-- `gpt-4.1` (OpenAI)
-- `gpt-4.1-mini` (OpenAI)
-- `gpt-4.1-nano` (OpenAI)
-- `gpt-4o` (OpenAI)
-- `gpt-4o-mini` (OpenAI)
-- `gpt-4o-mini-search-preview` (OpenAI)
-- `gpt-4o-search-preview` (OpenAI)
-- `o3` (OpenAI)
-- `o3-mini` (OpenAI)
-- `o1` (OpenAI)
-- `o1-mini` (OpenAI)
-- `grok-3` (default) (xAI)
-
-Providers supported:
-
-- xAI (Set `XAI_API_KEY` environment variable to your xAI API key)
-- OpenAI (Set `OPENAI_API_KEY` environment variable to your OpenAI API key)
-- Anthropic (Set `ANTHROPIC_API_KEY` environment variable to your Anthropic API key)
-
 ## Video Demo
 
 https://github.com/user-attachments/assets/7fe523e8-b953-4307-ac62-df58884bdfd0
+
+## Usage
+
+Simply type a message into a file in Neovim, and then run the `:ChatVimComplete`
+command to get a response from the default AI model. With no extra
+configuration, the entire file is treaged as the user prompt. See below for more
+details.
 
 ## Features
 
@@ -140,11 +120,33 @@ systemDelimiter = "# === SYSTEM ==="
 
 All fields are optional.
 
-## Example
+## Models
 
-See the [example markdown document](example.md) for a complete example of how to
-use ChatVim. The example document includes user messages, assistant messages,
-and system messages, as well as the front matter configuration.
+Models supported:
+
+- `claude-sonnet-4-0` (Anthropic)
+- `claude-opus-4-0` (Anthropic)
+- `claude-3-7-sonnet-latest` (Anthropic)
+- `claude-3-5-sonnet-latest` (Anthropic)
+- `gpt-4.1` (OpenAI)
+- `gpt-4.1-mini` (OpenAI)
+- `gpt-4.1-nano` (OpenAI)
+- `gpt-4o` (OpenAI)
+- `gpt-4o-mini` (OpenAI)
+- `gpt-4o-mini-search-preview` (OpenAI)
+- `gpt-4o-search-preview` (OpenAI)
+- `o3` (OpenAI)
+- `o3-mini` (OpenAI)
+- `o1` (OpenAI)
+- `o1-mini` (OpenAI)
+- `grok-3` (default) (xAI)
+
+Providers supported:
+
+- xAI (Set `XAI_API_KEY` environment variable to your xAI API key)
+- OpenAI (Set `OPENAI_API_KEY` environment variable to your OpenAI API key)
+- Anthropic (Set `ANTHROPIC_API_KEY` environment variable to your Anthropic API
+  key)
 
 ## License
 
