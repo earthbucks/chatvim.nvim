@@ -234,6 +234,9 @@ function M.complete_text()
           local ok, msg = pcall(vim.fn.json_decode, line)
           if ok and msg and type(msg) == "table" and msg.chunk ~= nil and msg.chunk ~= "" then
             session.partial = session:append_chunk(msg.chunk)
+          else
+            -- error handling for unexpected messages
+            vim.api.nvim_echo({ { "[Warning] Unexpected message: " .. line, "WarningMsg" } }, false, {})
           end
         end
       end
