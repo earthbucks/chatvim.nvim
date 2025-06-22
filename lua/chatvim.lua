@@ -291,7 +291,7 @@ function M.complete_text()
   )
 
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
-  local stream_js_path = plugin_dir .. "../stream.js"
+  local stream_js_path = plugin_dir .. "../codey.js"
 
   local job_id = vim.fn.jobstart({ "node", stream_js_path, "prompt", "--chunk", "--add-delimiters" }, {
     on_stdout = on_stdout,
