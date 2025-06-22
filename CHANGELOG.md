@@ -1,5 +1,8 @@
 # Changelog
 
+- v0.2.0:
+  - Use Codey for LLM streaming: github.com/codeybeaver/codey
+  - Support Anthropic models
 - v0.1.1:
   - Fix bug where models weren't used correctly.
 - v0.1.0

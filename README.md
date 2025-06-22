@@ -9,8 +9,10 @@ the chat window**. No special dialogs or UI elements are required.
 
 Models supported:
 
-- `grok-3` (default) (xAI)
-- `grok-3-beta` (xAI)
+- `claude-sonnet-4-0` (Anthropic)
+- `claude-opus-4-0` (Anthropic)
+- `claude-3-7-sonnet-latest` (Anthropic)
+- `claude-3-5-sonnet-latest` (Anthropic)
 - `gpt-4.1` (OpenAI)
 - `gpt-4.1-mini` (OpenAI)
 - `gpt-4.1-nano` (OpenAI)
@@ -22,11 +24,13 @@ Models supported:
 - `o3-mini` (OpenAI)
 - `o1` (OpenAI)
 - `o1-mini` (OpenAI)
+- `grok-3` (default) (xAI)
 
 Providers supported:
 
 - xAI (Set `XAI_API_KEY` environment variable to your xAI API key)
 - OpenAI (Set `OPENAI_API_KEY` environment variable to your OpenAI API key)
+- Anthropic (Set `ANTHROPIC_API_KEY` environment variable to your Anthropic API key)
 
 ## Video Demo
 
