@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@codeybeaver/codey':
-        specifier: ^0.0.3
-        version: 0.0.3
+        specifier: ^0.1.0
+        version: 0.1.0
       '@iarna/toml':
         specifier: ^2.2.5
         version: 2.2.5
@@ -35,6 +35,10 @@ importers:
         version: 5.8.3
 
 packages:
+
+  '@anthropic-ai/sdk@0.54.0':
+    resolution: {integrity: sha512-xyoCtHJnt/qg5GG6IgK+UJEndz8h8ljzt/caKXmq3LfBF81nC/BW6E4x2rOWCZcvsLyVW+e8U5mtIr6UCE/kJw==}
+    hasBin: true
 
   '@biomejs/biome@1.9.4':
     resolution: {integrity: sha512-1rkd7G70+o9KkTn5KLmDYXihGoTaIGO9PIIN2ZB7UJxFrWw04CZHPYiMRjYsaDvVV7hP1dYNRLxSANLaBFGpog==}
@@ -89,8 +93,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@codeybeaver/codey@0.0.3':
-    resolution: {integrity: sha512-gnCWhecloBV+2sVdnK2otpgpNGlZjh5+W+V323Y/0M/S3lKtY12vvN/fN+vOGxU5vUFDP6brDE0OndXFXwSN9A==}
+  '@codeybeaver/codey@0.1.0':
+    resolution: {integrity: sha512-/6Ch4rMNv70yP2rI7uGAVded0AvwWijFn0FlAzf/9o7HbxmGIWNk0xZmHawUJOKIiAsc/Lctz7DomxYNn60v6g==}
     hasBin: true
 
   '@colors/colors@1.5.0':
@@ -519,6 +523,8 @@ packages:
 
 snapshots:
 
+  '@anthropic-ai/sdk@0.54.0': {}
+
   '@biomejs/biome@1.9.4':
     optionalDependencies:
       '@biomejs/cli-darwin-arm64': 1.9.4
@@ -554,8 +560,9 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@codeybeaver/codey@0.0.3':
+  '@codeybeaver/codey@0.1.0':
     dependencies:
+      '@anthropic-ai/sdk': 0.54.0
       '@iarna/toml': 2.2.5
       '@types/marked-terminal': 6.1.1
       commander: 14.0.0
