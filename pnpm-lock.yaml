@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@codeybeaver/codey':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.1
+        version: 0.1.1
       '@iarna/toml':
         specifier: ^2.2.5
         version: 2.2.5
@@ -93,8 +93,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@codeybeaver/codey@0.1.0':
-    resolution: {integrity: sha512-/6Ch4rMNv70yP2rI7uGAVded0AvwWijFn0FlAzf/9o7HbxmGIWNk0xZmHawUJOKIiAsc/Lctz7DomxYNn60v6g==}
+  '@codeybeaver/codey@0.1.1':
+    resolution: {integrity: sha512-YOl15+j/A4BP1SgMtwsCuC7H175TNEeyUUEyiCTtEJId6LHNUHvAwQo/1VOSbskaBErGN+tvZec+DVPMQnM13Q==}
     hasBin: true
 
   '@colors/colors@1.5.0':
@@ -560,7 +560,7 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@codeybeaver/codey@0.1.0':
+  '@codeybeaver/codey@0.1.1':
     dependencies:
       '@anthropic-ai/sdk': 0.54.0
       '@iarna/toml': 2.2.5

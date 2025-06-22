@@ -232,7 +232,7 @@ function M.complete_text()
       for _, line in ipairs(data) do
         if line ~= "" then
           local ok, msg = pcall(vim.fn.json_decode, line)
-          if ok and msg.chunk then
+          if ok and msg and type(msg) == "table" and msg.chunk ~= nil and msg.chunk ~= "" then
             session.partial = session:append_chunk(msg.chunk)
           end
         end
