@@ -1,5 +1,5 @@
 +++
-model = "grok-3"
+model = "o3"
 +++
 
 i created a plugin for neovim called chatvim. it is a lua plugin that runs a node.js application. the node.js application is what uses the openai api to stream chat completions. it's called chatvim because what is does is let the user chat with a markdown file in neovim. it uses the markdown file as history.
