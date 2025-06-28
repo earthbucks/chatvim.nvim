@@ -7,7 +7,7 @@ _ChatVim CLI way to chat with markdown files on your command line._
 The basic idea of ChatVim CLI is to put LLMs on the command line, like this:
 
 ```sh
-cv prompt "What is 1 + 1?"
+chatvim forget "What is 1 + 1?"
 ```
 
 Output
@@ -23,12 +23,28 @@ Read on for more details.
 Install globally using npm:
 
 ```sh
-npm install -g @chatvim/cli
+npm install -g chatvim
 ```
 
 This provides one global command:
 
-- `cv` &nbsp;—&nbsp; Main entry point for ChatVim CLI
+- `chatvim` &nbsp;—&nbsp; Main entry point for ChatVim CLI
+
+It is recommended to alias this command to `cv` for convenience:
+
+sh:
+
+```sh
+alias cv='chatvim'
+```
+
+nu:
+
+```nu
+alias cv = 'chatvim'
+```
+
+The rest of this documentation will refer to the command as `cv`.
 
 ## Usage
 
@@ -54,7 +70,7 @@ cv --help
 
 A brief overview of available commands:
 
-- **prompt** &nbsp;—&nbsp; Send a prompt to the LLM and get a response
+- **forget** &nbsp;—&nbsp; Send a prompt to the LLM and get a response
 - **save** &nbsp;—&nbsp; Save a prompt and response to a markdown file
 - **buffer** &nbsp;—&nbsp; Buffer input for later processing
 - **format** &nbsp;—&nbsp; Format markdown output for better readability
@@ -66,10 +82,10 @@ A brief overview of available commands:
 
 ```sh
 # Simple math prompt
-cv prompt "What is 2 plus 2?"
+cv forget "What is 2 plus 2?"
 
 # Code generation
-cv prompt "Generate a JavaScript function that reverses an array"
+cv forget "Generate a JavaScript function that reverses an array"
 
 # Save the prompt and response to a markdown file
 cv save --file cv.md "Generate a Python function to calculate factorial"
@@ -79,16 +95,16 @@ cv save "Generate a Python function to calculate Fibonacci sequence"
 # ^ This will create or overwrite `cv.md`
 
 # Pipe input as prompt
-cat my-instructions.txt | cv prompt
+cat my-instructions.txt | cv forget
 
 # Generate, buffer, format, and colorize Markdown output
-cv prompt "Show me a Python bubble sort function with comments in Markdown." | cv buffer | cv format | cv color
+cv forget "Show me a Python bubble sort function with comments in Markdown." | cv buffer | cv format | cv color
 
 # Buffer and format direct Markdown input
 echo "# Quick Note\n\nThis is a short note with a code block:\n\n\`\`\`bash\necho 'Hello, World!'\n\`\`\`" | cv buffer | cv format
 
 # Format and colorize without buffering
-cv prompt "Write a short Markdown note." | cv format | cv color
+cv forget "Write a short Markdown note." | cv format | cv color
 ```
 
 ## License
