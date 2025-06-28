@@ -1,7 +1,6 @@
 # ChatVim CLI 🦫
 
-_ChatVim CLI is a versatile CLI and Node.js toolkit for leveraging LLMs to help
-with computer programming tasks._
+_ChatVim CLI way to chat with markdown files on your command line._
 
 ---
 
