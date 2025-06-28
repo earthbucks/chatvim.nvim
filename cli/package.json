@@ -1,0 +1,43 @@
+{
+  "name": "@codeybeaver/codey",
+  "version": "0.1.3",
+  "description": "LLMs on the command line.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "bin": {
+    "codey": "./dist/codey.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codeybeaver/codey.git"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/codey.js",
+    "prepublishOnly": "pnpm run build",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint --write --unsafe",
+    "format": "biome format --write",
+    "fix": "pnpm run typecheck && pnpm run lint && pnpm run format"
+  },
+  "author": "Ryan X. Charles <ryan@ryanxcharles.com> (https://ryanxcharles.com)",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.5",
+    "@types/node": "^24.0.3",
+    "openai": "^5.6.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
+    "@iarna/toml": "^2.2.5",
+    "@types/marked-terminal": "^6.1.1",
+    "commander": "^14.0.0",
+    "marked": "^15.0.12",
+    "marked-terminal": "^7.3.0",
+    "ora": "^8.2.0",
+    "prettier": "^3.5.3",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.48"
+  }
+}
