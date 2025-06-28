@@ -2,8 +2,6 @@
 
 _ChatVim CLI way to chat with markdown files on your command line._
 
----
-
 ## Basic Idea
 
 The basic idea of ChatVim CLI is to put LLMs on the command line, like this:
@@ -31,8 +29,6 @@ npm install -g @chatvim/cli
 This provides one global command:
 
 - `cv` &nbsp;—&nbsp; Main entry point for ChatVim CLI
-
----
 
 ## Usage
 
@@ -66,8 +62,6 @@ A brief overview of available commands:
 - **models** &nbsp;—&nbsp; List available LLM models
 - **providers** &nbsp;—&nbsp; List available LLM providers
 
----
-
 ## Example Workflows
 
 ```sh
@@ -97,12 +91,8 @@ echo "# Quick Note\n\nThis is a short note with a code block:\n\n\`\`\`bash\nech
 cv prompt "Write a short Markdown note." | cv format | cv color
 ```
 
----
-
 ## License
 
 MIT
-
----
 
 _Developed by Identellica LLC_ 🦫
