@@ -1,5 +1,5 @@
 {
-  "name": "@chatvim/cli",
+  "name": "chatvim",
   "version": "0.1.4",
   "description": "LLMs on the command line.",
   "main": "./dist/index.js",
