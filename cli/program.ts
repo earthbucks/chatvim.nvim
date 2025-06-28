@@ -5,7 +5,7 @@ import { handleForget } from "./commands/forget.js";
 import { handleFormat } from "./commands/format.js";
 import { handleModels } from "./commands/models.js";
 import { handleProviders } from "./commands/providers.js";
-import { handleSave } from "./commands/save.js";
+import { handleRemember } from "./commands/remember.js";
 
 const program = new Command();
 
@@ -27,8 +27,8 @@ program
   .action(handleForget);
 
 program
-  .command("save")
-  .description("Save a prompt and response to the chat history")
+  .command("remember")
+  .description("Use a markdown file to log the chat history")
   .argument(
     "[input]",
     "Prompt text to send to the LLM (optional; can be piped)",
@@ -38,7 +38,7 @@ program
     "Markdown file to use as context (optional)",
     "chat.md",
   )
-  .action(handleSave);
+  .action(handleRemember);
 
 program
   .command("models")
