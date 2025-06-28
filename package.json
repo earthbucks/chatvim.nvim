@@ -1,7 +1,7 @@
 {
   "name": "chatvim.nvim",
   "version": "0.0.1",
-  "description": "Text completions in neovim.",
+  "description": "AI chat with markdown files in Neovim.",
   "main": "stream.js",
   "type": "module",
   "repository": {
