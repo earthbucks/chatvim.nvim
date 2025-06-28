@@ -36,7 +36,7 @@ program
   .option(
     "--file <file>",
     "Markdown file to use as context (optional)",
-    "chat.md",
+    "chatvim.md",
   )
   .action(handleSave);
 
