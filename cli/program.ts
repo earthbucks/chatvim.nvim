@@ -10,8 +10,8 @@ import { handleSave } from "./commands/save.js";
 const program = new Command();
 
 program
-  .name("codey")
-  .description("Codey: LLM-powered coding assistant")
+  .name("chatvim")
+  .description("ChatVim: LLM-powered coding assistant")
   .version("0.1.7");
 
 program
@@ -36,7 +36,7 @@ program
   .option(
     "--file <file>",
     "Markdown file to use as context (optional)",
-    "codey.md",
+    "chat.md",
   )
   .action(handleSave);
 
