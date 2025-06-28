@@ -12,7 +12,7 @@ const program = new Command();
 program
   .name("codey")
   .description("Codey: LLM-powered coding assistant")
-  .version("0.1.3");
+  .version("0.1.7");
 
 program
   .command("prompt")
