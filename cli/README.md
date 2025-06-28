@@ -71,11 +71,11 @@ chatvim forget "What is 2 plus 2?"
 # Code generation
 chatvim forget "Generate a JavaScript function that reverses an array"
 
-# Save the prompt and response to a markdown file
-chatvim save --file chat.md "Generate a Python function to calculate factorial"
+# Use a markdown file as context and log the response
+chatvim remember --file chat.md "Generate a Python function to calculate factorial"
 
 # If you don't specify the file name, it will default to `chat.md`
-chatvim save "Generate a Python function to calculate Fibonacci sequence"
+chatvim remember "Generate a Python function to calculate Fibonacci sequence"
 # ^ This will create or overwrite `chat.md`
 
 # Pipe input as prompt
