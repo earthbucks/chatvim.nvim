@@ -1,5 +1,6 @@
 {
   "include": ["*.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["cli"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["node"],

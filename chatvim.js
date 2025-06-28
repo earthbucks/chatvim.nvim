@@ -1,2 +1,2 @@
-import { program } from "@codeybeaver/codey";
+import { program } from "chatvim/program";
 program.parse(process.argv);

@@ -1,2 +1,3 @@
-import { program } from "chatvim";
+import { program } from "chatvim/program";
+
 program.parse(process.argv);
