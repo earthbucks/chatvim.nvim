@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { handleBuffer } from "./commands/buffer.js";
 import { handleColor } from "./commands/color.js";
-import { handlePrompt as handleForget } from "./commands/forget.js";
+import { handleForget } from "./commands/forget.js";
 import { handleFormat } from "./commands/format.js";
 import { handleModels } from "./commands/models.js";
 import { handleProviders } from "./commands/providers.js";

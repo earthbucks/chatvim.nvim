@@ -3,7 +3,7 @@ import { withTimeout } from "../util/async.js";
 import { parseChatLogFromText } from "../util/parse.js";
 import { readStdin } from "../util/stdin.js";
 
-export async function handlePrompt(
+export async function handleForget(
   input: string | undefined,
   opts: {
     model?: string;
