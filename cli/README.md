@@ -30,22 +30,6 @@ This provides one global command:
 
 - `chatvim` &nbsp;—&nbsp; Main entry point for ChatVim CLI
 
-It is recommended to alias this command to `cv` for convenience:
-
-sh:
-
-```sh
-alias cv='chatvim'
-```
-
-nu:
-
-```nu
-alias cv = 'chatvim'
-```
-
-The rest of this documentation will refer to the command as `cv`.
-
 ## Usage
 
 ### API Keys
@@ -63,7 +47,7 @@ export XAI_API_KEY=your_xai_api_key
 For full usage instructions, run:
 
 ```sh
-cv --help
+chatvim --help
 ```
 
 ### Command List
@@ -82,29 +66,29 @@ A brief overview of available commands:
 
 ```sh
 # Simple math prompt
-cv forget "What is 2 plus 2?"
+chatvim forget "What is 2 plus 2?"
 
 # Code generation
-cv forget "Generate a JavaScript function that reverses an array"
+chatvim forget "Generate a JavaScript function that reverses an array"
 
 # Save the prompt and response to a markdown file
-cv save --file cv.md "Generate a Python function to calculate factorial"
+chatvim save --file cv.md "Generate a Python function to calculate factorial"
 
 # If you don't specify the file name, it will default to `cv.md`
-cv save "Generate a Python function to calculate Fibonacci sequence"
+chatvim save "Generate a Python function to calculate Fibonacci sequence"
 # ^ This will create or overwrite `cv.md`
 
 # Pipe input as prompt
-cat my-instructions.txt | cv forget
+cat my-instructions.txt | chatvim forget
 
 # Generate, buffer, format, and colorize Markdown output
-cv forget "Show me a Python bubble sort function with comments in Markdown." | cv buffer | cv format | cv color
+chatvim forget "Show me a Python bubble sort function with comments in Markdown." | chatvim buffer | chatvim format | chatvim color
 
 # Buffer and format direct Markdown input
-echo "# Quick Note\n\nThis is a short note with a code block:\n\n\`\`\`bash\necho 'Hello, World!'\n\`\`\`" | cv buffer | cv format
+echo "# Quick Note\n\nThis is a short note with a code block:\n\n\`\`\`bash\necho 'Hello, World!'\n\`\`\`" | chatvim buffer | chatvim format
 
 # Format and colorize without buffering
-cv forget "Write a short Markdown note." | cv format | cv color
+chatvim forget "Write a short Markdown note." | chatvim format | chatvim color
 ```
 
 ## License
