@@ -2,7 +2,7 @@
   "name": "chatvim.nvim",
   "version": "0.3.0",
   "description": "AI chat with markdown files in Neovim.",
-  "main": "stream.js",
+  "main": "chatvim.js",
   "engines": {
     "node": ">=24.0.0"
   },
@@ -12,7 +12,6 @@
     "url": "https://github.com/chatvim/chatvim.nvim.git"
   },
   "scripts": {
-    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint --write --unsafe",
     "format": "biome format --write",
