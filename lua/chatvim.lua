@@ -365,12 +365,14 @@ local function open_chatvim_window()
   vim.bo[buf].swapfile = false      -- No swap file
   vim.bo[buf].filetype = 'markdown' -- Set filetype to markdown
 
-  -- Optionally, give it a temporary name (purely for display purposes)
-  vim.api.nvim_buf_set_name(buf, 'temp.md')
+  -- -- Optionally, give it a temporary name (purely for display purposes)
+  -- vim.api.nvim_buf_set_name(buf, 'temp.md')
 
   -- Open a new vertical split on the left side
-  vim.cmd('vertical leftabove split')
-  vim.cmd('wincmd H')
+  -- vim.cmd('vertical leftabove split')
+  -- vim.cmd('wincmd H')
+  -- Alternatively, use the API to create a vertical split
+  vim.api.nvim_command('topleft vertical split')
 
   -- Get the window ID of the newly created window
   local win = vim.api.nvim_get_current_win()
