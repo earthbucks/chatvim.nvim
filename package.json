@@ -3,6 +3,9 @@
   "version": "0.3.0",
   "description": "AI chat with markdown files in Neovim.",
   "main": "stream.js",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "type": "module",
   "repository": {
     "type": "git",
