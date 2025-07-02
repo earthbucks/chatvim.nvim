@@ -55,25 +55,25 @@ You must also set at least one API key:
 Then, install with LazyVim:
 
 ```lua
-  {
-    "chatvim/chatvim.nvim",
-    build = "npm install",
-    config = function()
-      require("chatvim")
-    end,
-  },
+{
+  "chatvim/chatvim.nvim",
+  build = "npm install",
+  config = function()
+    require("chatvim")
+  end,
+},
 ```
 
 Or with Packer:
 
 ```lua
-  use {
-    "chatvim/chatvim.nvim",
-    run = "npm install",
-    config = function()
-      require("chatvim")
-    end,
-  }
+use {
+  "chatvim/chatvim.nvim",
+  run = "npm install",
+  config = function()
+    require("chatvim")
+  end,
+}
 ```
 
 ## Commands
@@ -90,6 +90,14 @@ present, it will treat the input as user input and append a response.
 ```
 
 Stops the current streaming response.
+
+```vim
+:ChatvimNew [direction]
+```
+
+`direction` can be blank or `left`, `right`, `top`, or `bottom`. Opens a new
+(unsaved) markdown document in a new split window for a new chat session. If
+`direction` is not specified, it defaults to the current window.
 
 ## Recommended Shortcuts
 
