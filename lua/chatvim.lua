@@ -353,6 +353,39 @@ function M.stop_completion()
   -- Clear stored job_id
   current_job_id = nil
 end
+--
+-- Function to open a new markdown buffer in a left-side split
+local function open_chatvim_window()
+  -- Create a new buffer (not listed, scratch buffer)
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Set buffer options using modern vim.bo interface
+  vim.bo[buf].buftype = 'nofile'    -- Not tied to a file
+  vim.bo[buf].bufhidden = 'hide'    -- Hide when not displayed
+  vim.bo[buf].swapfile = false      -- No swap file
+  vim.bo[buf].filetype = 'markdown' -- Set filetype to markdown
+
+  -- Optionally, give it a temporary name (purely for display purposes)
+  vim.api.nvim_buf_set_name(buf, 'temp.md')
+
+  -- Open a new vertical split on the left side
+  vim.cmd('vertical leftabove split')
+  vim.cmd('wincmd H')
+
+  -- Get the window ID of the newly created window
+  local win = vim.api.nvim_get_current_win()
+
+  -- Attach the buffer to the new window
+  vim.api.nvim_win_set_buf(win, buf)
+
+  -- -- Optional: Set window width (e.g., 40 columns)
+  -- vim.api.nvim_win_set_width(win, 40)
+end
+
+-- Define a new command called 'ChatVimOpen' to trigger the function
+vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
+  desc = 'Open a new markdown buffer in a left-side split for ChatVim',
+})
 
 vim.api.nvim_create_user_command("ChatVimComplete", function()
   require("chatvim").complete_text()
