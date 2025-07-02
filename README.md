@@ -45,7 +45,7 @@ first response.
 
 ## Installation
 
-You must install node.js v22+.
+You must install node.js v24+.
 
 You must also set at least one API key:
 
