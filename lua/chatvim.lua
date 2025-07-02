@@ -218,7 +218,7 @@ function M.complete_text()
   if current_job_id then
     vim.api.nvim_echo({ { "[Warning: Stopping existing completion process]", "WarningMsg" } }, false, {})
     vim.fn.jobstop(current_job_id)
-    -- Cleanup will happen via on_exit or ChatVimStop
+    -- Cleanup will happen via on_exit or ChatvimStop
   end
 
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
@@ -397,17 +397,17 @@ local function open_chatvim_window(args)
   -- vim.api.nvim_win_set_width(win, 40)
 end
 
--- Define a new command called 'ChatVimNew' with an optional argument
-vim.api.nvim_create_user_command("ChatVimNew", open_chatvim_window, {
+-- Define a new command called 'ChatvimNew' with an optional argument
+vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
   nargs = "?", -- Accepts 0 or 1 argument
-  desc = "Open a new markdown buffer, optionally in a left-side split (ChatVimNew [left])",
+  desc = "Open a new markdown buffer, optionally in a left-side split (ChatvimNew [left])",
 })
 
-vim.api.nvim_create_user_command("ChatVimComplete", function()
+vim.api.nvim_create_user_command("ChatvimComplete", function()
   require("chatvim").complete_text()
 end, {})
 
-vim.api.nvim_create_user_command("ChatVimStop", function()
+vim.api.nvim_create_user_command("ChatvimStop", function()
   require("chatvim").stop_completion()
 end, {})
 

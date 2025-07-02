@@ -1,8 +1,8 @@
-# ChatVim
+# Chatvim
 
 **AI chat with markdown files in Neovim.**
 
-Unlike many other Neovim AI plugins, **ChatVim uses a plain markdown document as
+Unlike many other Neovim AI plugins, **Chatvim uses a plain markdown document as
 the chat window**. No special dialogs or UI elements are required.
 
 ## Video Demo
@@ -11,21 +11,21 @@ https://github.com/user-attachments/assets/7fe523e8-b953-4307-ac62-df58884bdfd0
 
 ## Usage
 
-Simply type a message into a file in Neovim, and then run the `:ChatVimComplete`
+Simply type a message into a file in Neovim, and then run the `:ChatvimComplete`
 command to get a response from the default AI model. With no extra
 configuration, the entire file is treaged as the user prompt. See below for more
 details.
 
 ## Features
 
-The purpose of ChatVim is to treat a markdown document as a conversation with an
+The purpose of Chatvim is to treat a markdown document as a conversation with an
 AI assistant instead of using a separate chat window or dialog box.
 
 You can save, copy, fork, version, and share the markdown document as you would
 with any other markdown file. This is easier for some workflows than using a
 separate chat interface.
 
-Because ChatVim uses chat completion AI models, there must be some way to
+Because Chatvim uses chat completion AI models, there must be some way to
 separate user messages, assistant messages, and system messages. This is done
 using delimiters in the markdown document.
 
@@ -79,32 +79,32 @@ Or with Packer:
 ## Commands
 
 ```vim
-:ChatVimComplete
+:ChatvimComplete
 ```
 
 Completes the current markdown document using the AI model. If no delimiters are
 present, it will treat the input as user input and append a response.
 
 ```vim
-:ChatVimStop
+:ChatvimStop
 ```
 
 Stops the current streaming response.
 
 ## Recommended Shortcuts
 
-Add these shortcuts to your nvim configuration to make it easier to use ChatVim.
+Add these shortcuts to your nvim configuration to make it easier to use Chatvim.
 
 ```lua
 local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatVimComplete<CR>", opts)
-vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatVimStop<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvc", ":ChatvimComplete<CR>", opts)
+vim.api.nvim_set_keymap("n", "<Leader>cvs", ":ChatvimStop<CR>", opts)
 ```
 
 ## Configuration
 
 Use "+++" for TOML or "---" for YAML front matter. Front matter is used to
-specify settings for ChatVim. Place the front matter at the top of your markdown
+specify settings for Chatvim. Place the front matter at the top of your markdown
 document, before any content. The front matter should look like this:
 
 ```markdown
