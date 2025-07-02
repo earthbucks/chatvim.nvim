@@ -355,7 +355,7 @@ function M.stop_completion()
 end
 --
 -- Function to open a new markdown buffer in a left-side split
-local function open_chatvim_window()
+local function open_chatvim_window(args)
   -- Create a new buffer (not listed, scratch buffer)
   local buf = vim.api.nvim_create_buf(false, true)
 
@@ -368,14 +368,18 @@ local function open_chatvim_window()
   -- -- Optionally, give it a temporary name (purely for display purposes)
   -- vim.api.nvim_buf_set_name(buf, 'temp.md')
 
-  -- Open a new vertical split on the left side
-  -- vim.cmd('vertical leftabove split')
-  -- vim.cmd('wincmd H')
-  -- Alternatively, use the API to create a vertical split
-  vim.api.nvim_command('topleft vertical split')
+  -- Check if the argument is "left" to determine window placement
+  local placement = args.args or ""
+  local win
 
-  -- Get the window ID of the newly created window
-  local win = vim.api.nvim_get_current_win()
+  if placement == "left" then
+    -- Open a new vertical split at the far left of the Neovim instance
+    vim.cmd('topleft vertical split')
+    win = vim.api.nvim_get_current_win()
+  else
+    -- Use the current window
+    win = vim.api.nvim_get_current_win()
+  end
 
   -- Attach the buffer to the new window
   vim.api.nvim_win_set_buf(win, buf)
@@ -384,9 +388,10 @@ local function open_chatvim_window()
   -- vim.api.nvim_win_set_width(win, 40)
 end
 
--- Define a new command called 'ChatVimNew' to trigger the function
+-- Define a new command called 'ChatVimNew' with an optional argument
 vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
-  desc = 'Open a new markdown buffer in a left-side split for ChatVim',
+  nargs = '?', -- Accepts 0 or 1 argument
+  desc = 'Open a new markdown buffer, optionally in a left-side split (ChatVimNew [left])',
 })
 
 vim.api.nvim_create_user_command("ChatVimComplete", function()
