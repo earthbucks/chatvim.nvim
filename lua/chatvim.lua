@@ -384,7 +384,7 @@ local function open_chatvim_window()
   -- vim.api.nvim_win_set_width(win, 40)
 end
 
--- Define a new command called 'ChatVimOpen' to trigger the function
+-- Define a new command called 'ChatVimNew' to trigger the function
 vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
   desc = 'Open a new markdown buffer in a left-side split for ChatVim',
 })
