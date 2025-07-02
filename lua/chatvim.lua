@@ -382,7 +382,7 @@ local function open_chatvim_window(args)
   elseif placement == "top" then
     vim.cmd("topleft split")
     win = vim.api.nvim_get_current_win()
-  elseif placement == "bottom" then
+  elseif placement == "bottom" or placement == "bot" then
     vim.cmd("botright split")
     win = vim.api.nvim_get_current_win()
   else
