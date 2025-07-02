@@ -1,6 +1,6 @@
 {
   "name": "chatvim.nvim",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "description": "AI chat with markdown files in Neovim.",
   "main": "stream.js",
   "type": "module",
