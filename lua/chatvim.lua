@@ -293,7 +293,7 @@ function M.complete_text()
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
   local stream_js_path = plugin_dir .. "../chatvim.js"
 
-  local job_id = vim.fn.jobstart({ "node", stream_js_path, "forget", "--chunk", "--add-delimiters" }, {
+  local job_id = vim.fn.jobstart({ "node", stream_js_path, "complete", "--chunk", "--add-delimiters" }, {
     on_stdout = on_stdout,
     on_stderr = on_stderr,
     on_exit = on_exit,
