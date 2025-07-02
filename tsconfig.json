@@ -2,6 +2,7 @@
   "include": ["*.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["cli"],
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["node"],
     "isolatedModules": true,
