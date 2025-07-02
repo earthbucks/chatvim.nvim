@@ -360,10 +360,10 @@ local function open_chatvim_window(args)
   local buf = vim.api.nvim_create_buf(false, true)
 
   -- Set buffer options using modern vim.bo interface
-  vim.bo[buf].buftype = 'nofile'    -- Not tied to a file
-  vim.bo[buf].bufhidden = 'hide'    -- Hide when not displayed
-  vim.bo[buf].swapfile = false      -- No swap file
-  vim.bo[buf].filetype = 'markdown' -- Set filetype to markdown
+  vim.bo[buf].buftype = "nofile" -- Not tied to a file
+  vim.bo[buf].bufhidden = "hide" -- Hide when not displayed
+  vim.bo[buf].swapfile = false -- No swap file
+  vim.bo[buf].filetype = "markdown" -- Set filetype to markdown
 
   -- -- Optionally, give it a temporary name (purely for display purposes)
   -- vim.api.nvim_buf_set_name(buf, 'temp.md')
@@ -374,7 +374,16 @@ local function open_chatvim_window(args)
 
   if placement == "left" then
     -- Open a new vertical split at the far left of the Neovim instance
-    vim.cmd('topleft vertical split')
+    vim.cmd("topleft vertical split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "right" then
+    vim.cmd("botright vertical split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "top" then
+    vim.cmd("topleft split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "bottom" then
+    vim.cmd("botright split")
     win = vim.api.nvim_get_current_win()
   else
     -- Use the current window
@@ -389,9 +398,9 @@ local function open_chatvim_window(args)
 end
 
 -- Define a new command called 'ChatVimNew' with an optional argument
-vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
-  nargs = '?', -- Accepts 0 or 1 argument
-  desc = 'Open a new markdown buffer, optionally in a left-side split (ChatVimNew [left])',
+vim.api.nvim_create_user_command("ChatVimNew", open_chatvim_window, {
+  nargs = "?", -- Accepts 0 or 1 argument
+  desc = "Open a new markdown buffer, optionally in a left-side split (ChatVimNew [left])",
 })
 
 vim.api.nvim_create_user_command("ChatVimComplete", function()
