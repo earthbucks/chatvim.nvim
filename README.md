@@ -165,4 +165,4 @@ Providers supported:
 
 MIT license. See [LICENSE](LICENSE).
 
-Copyright (C) 2025 Identellica LLC
+Copyright (C) 2025 Ryan X. Charles
