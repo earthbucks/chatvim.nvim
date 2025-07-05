@@ -1,7 +1,3 @@
-+++
-model = "o3"
-+++
-
 i created a plugin for neovim called chatvim. it is a lua plugin that runs a
 node.js application. the node.js application is what uses the openai api to
 stream chat completions. it's called chatvim because what is does is let the
@@ -1576,3 +1572,13 @@ parsing, or integration with other `chatvim` features), let me know, and I can
 help expand this solution!
 
 # === USER ===
+
+what model are you?
+
+# === ASSISTANT ===
+
+I’m ChatGPT, a large-language model from OpenAI’s GPT-4 family.
+
+# === USER ===
+
+

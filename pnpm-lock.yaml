@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.5
         version: 2.2.5
       chatvim:
-        specifier: ^0.3.0
-        version: 0.3.0
+        specifier: ^0.3.2
+        version: 0.3.2
       yaml:
         specifier: ^2.8.0
         version: 2.8.0
@@ -144,8 +144,8 @@ packages:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
     engines: {node: '>=10'}
 
-  chatvim@0.3.0:
-    resolution: {integrity: sha512-vJYUfrZBhLFWp9fizX57625h+m5uWaGaCwPAq1nQ8Lrny6SbqYepnvGVMyhOuX7ANq1TNANI4V6eVQx8AvYimQ==}
+  chatvim@0.3.2:
+    resolution: {integrity: sha512-ABcuOyWz84RhBwTCOeCbLTjMZZQtMDGril260Bf80xmucmGKU6IlNWr/KW/rmDH6RhxYOdd6ocihQBH54++m1Q==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
@@ -179,6 +179,10 @@ packages:
   commander@14.0.0:
     resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
     engines: {node: '>=20'}
+
+  deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
+    engines: {node: '>=0.10.0'}
 
   emoji-regex@10.4.0:
     resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
@@ -466,12 +470,13 @@ snapshots:
 
   char-regex@1.0.2: {}
 
-  chatvim@0.3.0:
+  chatvim@0.3.2:
     dependencies:
       '@anthropic-ai/sdk': 0.54.0
       '@iarna/toml': 2.2.5
       '@types/marked-terminal': 6.1.1
       commander: 14.0.0
+      deepmerge: 4.3.1
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
       openai: 5.8.1(zod@3.25.67)
@@ -516,6 +521,8 @@ snapshots:
   color-name@1.1.4: {}
 
   commander@14.0.0: {}
+
+  deepmerge@4.3.1: {}
 
   emoji-regex@10.4.0: {}
 
