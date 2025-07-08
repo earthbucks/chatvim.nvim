@@ -403,6 +403,22 @@ vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
   desc = "Open a new markdown buffer, optionally in a left-side split (ChatvimNew [left])",
 })
 
+vim.api.nvim_create_user_command("ChatvimNewLeft", function()
+  open_chatvim_window({ args = "left" })
+end, { desc = "Open a new markdown buffer in a left-side split" })
+
+vim.api.nvim_create_user_command("ChatvimNewRight", function()
+  open_chatvim_window({ args = "right" })
+end, { desc = "Open a new markdown buffer in a right-side split" })
+
+vim.api.nvim_create_user_command("ChatvimNewTop", function()
+  open_chatvim_window({ args = "top" })
+end, { desc = "Open a new markdown buffer in a top split" })
+
+vim.api.nvim_create_user_command("ChatvimNewBottom", function()
+  open_chatvim_window({ args = "bottom" })
+end, { desc = "Open a new markdown buffer in a bottom split" })
+
 vim.api.nvim_create_user_command("ChatvimComplete", function()
   require("chatvim").complete_text()
 end, {})
