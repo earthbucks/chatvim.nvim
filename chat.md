@@ -1573,12 +1573,3 @@ help expand this solution!
 
 # === USER ===
 
-what model are you?
-
-# === ASSISTANT ===
-
-I’m ChatGPT, a large-language model from OpenAI’s GPT-4 family.
-
-# === USER ===
-
-
