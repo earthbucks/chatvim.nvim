@@ -2000,3 +2000,16 @@ That is exactly how CopilotChat / Avante approach long histories while still
 providing an immediate, lightweight chat window.
 
 # === USER ===
+
+currently, the `ChatVimStop` command stops the LLM from continuing in case the user has a reason to stop. it also has the keybindings `<leader>cvs`.
+
+here is the command function:
+
+```lua
+vim.api.nvim_create_user_command("ChatvimStop", function()
+  require("chatvim").stop_completion()
+end, {})
+```
+
+i wonder, is there a way to combine this with the keybinding `ctrl+c`? that would be very useful, although that particular keybinding is already a standard keybinding that neovim handles specially.
+
