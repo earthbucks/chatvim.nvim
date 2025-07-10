@@ -153,6 +153,10 @@ Models supported:
 - `o1` (OpenAI)
 - `o1-mini` (OpenAI)
 - `grok-3` (default) (xAI)
+- `grok-4-0709` (xAI)
+- `grok-3-mini` (xAI)
+- `grok-3-fast` (xAI)
+- `grok-3-mini-fast` (xAI)
 
 Providers supported:
 
