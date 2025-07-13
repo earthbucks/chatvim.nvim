@@ -407,30 +407,35 @@ local function chatvim_save()
     return
   end
 
-  -- Prompt for a filename (defaults to 'chat.md' in current directory)
-  vim.ui.input({
+  -- Prompt for a filename using command-line input (defaults to 'chat.md' in current directory)
+  local filename = vim.fn.input({
     prompt = 'Save chat as (e.g., chat.md): ',
     default = vim.fn.getcwd() .. '/chat.md',
-  }, function(filename)
-    if not filename or filename == "" then
-      vim.api.nvim_echo({{'Save cancelled', 'WarningMsg'}}, false, {})
-      return
-    end
+    completion = 'file',  -- Enable filename/path completion with <Tab>
+  })
 
-    -- Convert to a normal savable buffer
-    vim.bo[buf].buftype = ""  -- Make it a normal buffer
-    vim.bo[buf].bufhidden = ""  -- Reset to default (optional)
-    vim.bo[buf].swapfile = true  -- Enable swapfile now that it's savable (optional)
+  -- Handle cancellation or empty input
+  if not filename or filename == "" then
+    vim.api.nvim_echo({{'Save cancelled', 'WarningMsg'}}, false, {})
+    return
+  end
 
-    -- Set the buffer name (ties it to the file)
-    vim.api.nvim_buf_set_name(buf, filename)
+  -- Convert to a normal savable buffer
+  vim.bo[buf].buftype = ""  -- Make it a normal buffer
+  vim.bo[buf].bufhidden = ""  -- Reset to default (optional)
+  vim.bo[buf].swapfile = true  -- Enable swapfile now that it's savable (optional)
 
-    -- Save the file
-    vim.cmd('write')
+  -- Set the buffer name (ties it to the file)
+  vim.api.nvim_buf_set_name(buf, filename)
 
-    -- Notify the user
-    vim.api.nvim_echo({{'Chat saved to ' .. filename, 'Normal'}}, false, {})
-  end)
+  -- Save the file
+  vim.cmd('write')
+
+  -- Re-open the file to ensure it's properly tied to the buffer
+  vim.cmd('edit ' .. filename)
+
+  -- Notify the user
+  vim.api.nvim_echo({{'Chat saved to ' .. filename, 'Normal'}}, false, {})
 end
 
 -- Define a new command called 'ChatvimNew' with an optional argument
