@@ -1,5 +1,9 @@
 # Changelog
 
+- Next:
+  - Add `:ChatvimWrite` command to write the current ephemeral chat.
+- v0.3.0:
+  - Switch to Chatvim CLI. Deprecate Codey.
 - v0.2.0:
   - Use Codey for LLM streaming: github.com/codeybeaver/codey
   - Support Anthropic models
