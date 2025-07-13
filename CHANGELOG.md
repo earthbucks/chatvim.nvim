@@ -1,5 +1,7 @@
 # Changelog
 
+- v0.3.2
+  - Include leader key shortcuts by default.
 - v0.3.1:
   - Add `:ChatvimWrite` command to write the current ephemeral chat.
 - v0.3.0:
