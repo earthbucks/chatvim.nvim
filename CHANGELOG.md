@@ -1,6 +1,6 @@
 # Changelog
 
-- Next:
+- v0.3.1:
   - Add `:ChatvimWrite` command to write the current ephemeral chat.
 - v0.3.0:
   - Switch to Chatvim CLI. Deprecate Codey.
