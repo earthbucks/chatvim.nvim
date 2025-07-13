@@ -353,7 +353,7 @@ function M.stop_completion()
   -- Clear stored job_id
   current_job_id = nil
 end
---
+
 -- Function to open a new markdown buffer in a left-side split
 local function open_chatvim_window(args)
   -- Create a new buffer (not listed, scratch buffer)
@@ -397,6 +397,42 @@ local function open_chatvim_window(args)
   -- vim.api.nvim_win_set_width(win, 40)
 end
 
+-- Function to convert the current buffer to savable and prompt for filename
+local function chatvim_save()
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- Check if the buffer is already savable (buftype == "")
+  if vim.bo[buf].buftype == "" then
+    vim.cmd('write')  -- Already savable; just save it
+    return
+  end
+
+  -- Prompt for a filename (defaults to 'chat.md' in current directory)
+  vim.ui.input({
+    prompt = 'Save chat as (e.g., chat.md): ',
+    default = vim.fn.getcwd() .. '/chat.md',
+  }, function(filename)
+    if not filename or filename == "" then
+      vim.api.nvim_echo({{'Save cancelled', 'WarningMsg'}}, false, {})
+      return
+    end
+
+    -- Convert to a normal savable buffer
+    vim.bo[buf].buftype = ""  -- Make it a normal buffer
+    vim.bo[buf].bufhidden = ""  -- Reset to default (optional)
+    vim.bo[buf].swapfile = true  -- Enable swapfile now that it's savable (optional)
+
+    -- Set the buffer name (ties it to the file)
+    vim.api.nvim_buf_set_name(buf, filename)
+
+    -- Save the file
+    vim.cmd('write')
+
+    -- Notify the user
+    vim.api.nvim_echo({{'Chat saved to ' .. filename, 'Normal'}}, false, {})
+  end)
+end
+
 -- Define a new command called 'ChatvimNew' with an optional argument
 vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
   nargs = "?", -- Accepts 0 or 1 argument
@@ -426,5 +462,10 @@ end, {})
 vim.api.nvim_create_user_command("ChatvimStop", function()
   require("chatvim").stop_completion()
 end, {})
+
+-- Define the :ChatvimSave command
+vim.api.nvim_create_user_command('ChatvimSave', chatvim_save, {
+  desc = 'Save the current Chatvim buffer as a file',
+})
 
 return M

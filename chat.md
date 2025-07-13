@@ -890,9 +890,9 @@ local function open_chatvim_window()
   -- vim.api.nvim_win_set_width(win, 40)
 end
 
--- Define a new command called 'ChatVimOpen' to trigger the function
-vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
-  desc = 'Open a new markdown buffer in a left-side split for ChatVim',
+-- Define a new command called 'ChatvimOpen' to trigger the function
+vim.api.nvim_create_user_command('ChatvimNew', open_chatvim_window, {
+  desc = 'Open a new markdown buffer in a left-side split for Chatvim',
 })
 ```
 
@@ -969,9 +969,9 @@ local function open_chatvim_window()
   vim.api.nvim_win_set_width(win, 40)
 end
 
--- Define a new command called 'ChatVimNew' to trigger the function
-vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
-  desc = 'Open a new markdown buffer in a left-side split for ChatVim',
+-- Define a new command called 'ChatvimNew' to trigger the function
+vim.api.nvim_create_user_command('ChatvimNew', open_chatvim_window, {
+  desc = 'Open a new markdown buffer in a left-side split for Chatvim',
 })
 ```
 
@@ -1024,9 +1024,9 @@ local function open_chatvim_window()
   vim.api.nvim_win_set_width(win, 40)
 end
 
--- Define a new command called 'ChatVimNew' to trigger the function
-vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
-  desc = 'Open a new markdown buffer in a left-side split for ChatVim',
+-- Define a new command called 'ChatvimNew' to trigger the function
+vim.api.nvim_create_user_command('ChatvimNew', open_chatvim_window, {
+  desc = 'Open a new markdown buffer in a left-side split for Chatvim',
 })
 ```
 
@@ -1103,7 +1103,7 @@ Yes, you can run a Neovim command from the command line so that it executes
 automatically when Neovim starts. There are several ways to achieve this,
 depending on your use case and the specific command you want to run. This is
 particularly useful for automating tasks like opening a specific file, running a
-custom command (e.g., your `ChatVimNew` command), or setting up a particular
+custom command (e.g., your `ChatvimNew` command), or setting up a particular
 environment on startup.
 
 Below, I'll explain the primary methods to execute a command upon opening Neovim
@@ -1115,7 +1115,7 @@ from the command line, with examples tailored to your `chatvim` plugin context.
 
 Neovim supports the `-c` option, which allows you to specify a command to
 execute after Neovim starts (after loading the configuration but before entering
-the main loop). You can pass any Ex command (e.g., `:ChatVimNew`) with this
+the main loop). You can pass any Ex command (e.g., `:ChatvimNew`) with this
 option.
 
 **Syntax:**
@@ -1124,18 +1124,18 @@ option.
 nvim -c "command"
 ```
 
-**Example:** To run your `ChatVimNew` command (which opens a new markdown buffer
+**Example:** To run your `ChatvimNew` command (which opens a new markdown buffer
 in a left-side split) when starting Neovim, you would use:
 
 ```bash
-nvim -c "ChatVimNew"
+nvim -c "ChatvimNew"
 ```
 
 **Explanation:**
 
-- `-c "ChatVimNew"` tells Neovim to execute the `:ChatVimNew` command
+- `-c "ChatvimNew"` tells Neovim to execute the `:ChatvimNew` command
   immediately after startup.
-- This assumes that your `ChatVimNew` command is defined in your Neovim
+- This assumes that your `ChatvimNew` command is defined in your Neovim
   configuration (e.g., in your `init.lua` or plugin setup) and is available when
   Neovim starts.
 
@@ -1144,12 +1144,12 @@ nvim -c "ChatVimNew"
 - If the command contains spaces or special characters, enclose it in quotes.
 - You can chain multiple commands by using multiple `-c` options:
   ```bash
-  nvim -c "ChatVimNew" -c "echo 'ChatVim window opened!'"
+  nvim -c "ChatvimNew" -c "echo 'Chatvim window opened!'"
   ```
 - If you’re opening a specific file alongside the command, specify the file
   after the `-c` options:
   ```bash
-  nvim -c "ChatVimNew" myfile.txt
+  nvim -c "ChatvimNew" myfile.txt
   ```
 
 ---
@@ -1166,15 +1166,15 @@ for complex commands.
 nvim +command
 ```
 
-**Example:** To run `ChatVimNew` using this syntax:
+**Example:** To run `ChatvimNew` using this syntax:
 
 ```bash
-nvim +ChatVimNew
+nvim +ChatvimNew
 ```
 
 **Explanation:**
 
-- `+ChatVimNew` is equivalent to `-c "ChatVimNew"`.
+- `+ChatvimNew` is equivalent to `-c "ChatvimNew"`.
 - This method works well for simple commands without arguments or spaces.
 
 **Notes:**
@@ -1183,7 +1183,7 @@ nvim +ChatVimNew
   instead.
 - Like `-c`, you can specify files to open after the `+cmd`:
   ```bash
-  nvim +ChatVimNew myfile.txt
+  nvim +ChatvimNew myfile.txt
   ```
 
 ---
@@ -1203,13 +1203,13 @@ nvim --cmd "command"
 **Example:**
 
 ```bash
-nvim --cmd "ChatVimNew"
+nvim --cmd "ChatvimNew"
 ```
 
 **Explanation:**
 
-- `--cmd "ChatVimNew"` executes the command before loading the user
-  configuration. However, since custom commands like `ChatVimNew` are typically
+- `--cmd "ChatvimNew"` executes the command before loading the user
+  configuration. However, since custom commands like `ChatvimNew` are typically
   defined in your `init.lua` or plugins, this might not work for your use case
   unless the command is built-in or defined earlier.
 - This is more useful for built-in commands or settings (e.g.,
@@ -1234,7 +1234,7 @@ or functions.
 nvim -c "lua expression_or_function()"
 ```
 
-**Example:** If `open_chatvim_window()` is the Lua function behind `ChatVimNew`
+**Example:** If `open_chatvim_window()` is the Lua function behind `ChatvimNew`
 and it’s accessible in your plugin’s namespace (e.g.,
 `require('chatvim').open_chatvim_window()`), you can call it directly:
 
@@ -1270,9 +1270,9 @@ without needing to specify it on the command line each time.
 ```lua
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    vim.cmd("ChatVimNew")
+    vim.cmd("ChatvimNew")
   end,
-  desc = "Open ChatVim window on startup",
+  desc = "Open Chatvim window on startup",
 })
 ```
 
@@ -1280,28 +1280,28 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 - The `VimEnter` event triggers after Neovim has fully started, ensuring your
   custom command is available.
-- This runs `ChatVimNew` every time you start Neovim, which might not be
+- This runs `ChatvimNew` every time you start Neovim, which might not be
   desirable if you only want it for specific sessions. In that case, stick to
   the command-line methods above.
 
 ---
 
-### Practical Example for `ChatVimNew`
+### Practical Example for `ChatvimNew`
 
-Assuming you want to open Neovim and immediately run `ChatVimNew` to create your
+Assuming you want to open Neovim and immediately run `ChatvimNew` to create your
 leftmost markdown window, the most straightforward command would be:
 
 ```bash
-nvim -c "ChatVimNew"
+nvim -c "ChatvimNew"
 ```
 
 If you also want to open a specific file in another window, you can do:
 
 ```bash
-nvim -c "ChatVimNew" myfile.md
+nvim -c "ChatvimNew" myfile.md
 ```
 
-If `ChatVimNew` isn’t recognized (e.g., plugin not loaded yet), ensure your
+If `ChatvimNew` isn’t recognized (e.g., plugin not loaded yet), ensure your
 plugin is properly sourced, or use the Lua method:
 
 ```bash
@@ -1312,7 +1312,7 @@ nvim -c "lua require('chatvim').open_chatvim_window()"
 
 ### Additional Notes
 
-- **Command Availability:** Ensure that your `ChatVimNew` command or Lua
+- **Command Availability:** Ensure that your `ChatvimNew` command or Lua
   function is defined and accessible when Neovim starts. If it’s part of a
   plugin, the plugin must be loaded before the command runs (which is usually
   the case with `-c`).
@@ -1320,13 +1320,13 @@ nvim -c "lua require('chatvim').open_chatvim_window()"
   startup messages or use `nvim --startuptime log.txt` to debug loading issues.
   You can also add `echo` statements to confirm the command ran:
   ```bash
-  nvim -c "ChatVimNew" -c "echo 'Command executed'"
+  nvim -c "ChatvimNew" -c "echo 'Command executed'"
   ```
 - **Aliases or Scripts:** If you frequently start Neovim with this command,
   consider creating a shell alias or script. For example, in your shell
   configuration (e.g., `.bashrc` or `.zshrc`):
   ```bash
-  alias chatvim='nvim -c "ChatVimNew"'
+  alias chatvim='nvim -c "ChatvimNew"'
   ```
   Then, simply run `chatvim` to start Neovim with your command.
 
@@ -1337,7 +1337,7 @@ nvim -c "lua require('chatvim').open_chatvim_window()"
 
 ### Summary
 
-- Use `nvim -c "command"` to execute a command like `ChatVimNew` on startup
+- Use `nvim -c "command"` to execute a command like `ChatvimNew` on startup
   (recommended for most cases).
 - Use `nvim +command` as a shorthand for simple commands.
 - Use `nvim -c "lua ..."` to run Lua code directly if needed.
@@ -1349,20 +1349,20 @@ loading issues), let me know, and I can help refine the solution further!
 
 # === USER ===
 
-can i create options for my nvim command? i want `ChatVimNew` opens in the
-current window, but `ChatVimNew left` opens in a left-side split. is this
+can i create options for my nvim command? i want `ChatvimNew` opens in the
+current window, but `ChatvimNew left` opens in a left-side split. is this
 possible?
 
 # === ASSISTANT ===
 
 Yes, you can create options or arguments for your custom Neovim command like
-`ChatVimNew` to control its behavior, such as opening in the current window or
+`ChatvimNew` to control its behavior, such as opening in the current window or
 in a left-side split. Neovim's `vim.api.nvim_create_user_command` allows you to
 define commands with arguments, and you can parse those arguments in the
 callback function to adjust the behavior accordingly.
 
-In your case, you want `ChatVimNew` (without arguments) to open in the current
-window and `ChatVimNew left` to open in a left-side split. This is achievable by
+In your case, you want `ChatvimNew` (without arguments) to open in the current
+window and `ChatvimNew left` to open in a left-side split. This is achievable by
 defining the command to accept an optional argument and then handling that
 argument in the Lua function.
 
@@ -1390,8 +1390,8 @@ function as a string, which you can then parse to determine the behavior.
 
 ### Updated Code with Argument Handling
 
-Here’s the updated version of your code to support `ChatVimNew` (current window)
-and `ChatVimNew left` (left-side split):
+Here’s the updated version of your code to support `ChatvimNew` (current window)
+and `ChatvimNew left` (left-side split):
 
 ```lua
 local function open_chatvim_window(args)
@@ -1429,10 +1429,10 @@ local function open_chatvim_window(args)
   end
 end
 
--- Define a new command called 'ChatVimNew' with an optional argument
-vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
+-- Define a new command called 'ChatvimNew' with an optional argument
+vim.api.nvim_create_user_command('ChatvimNew', open_chatvim_window, {
   nargs = '?', -- Accepts 0 or 1 argument
-  desc = 'Open a new markdown buffer, optionally in a left-side split (ChatVimNew [left])',
+  desc = 'Open a new markdown buffer, optionally in a left-side split (ChatvimNew [left])',
 })
 ```
 
@@ -1441,7 +1441,7 @@ vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
 ### Explanation of the Code
 
 1. **Command Definition with `nargs = '?'`:**
-   - `nargs = '?'` allows the `ChatVimNew` command to accept zero or one
+   - `nargs = '?'` allows the `ChatvimNew` command to accept zero or one
      argument. If an argument is provided, it will be accessible in the callback
      function via `args.args`.
 
@@ -1473,14 +1473,14 @@ Now you can use the command in two ways:
 
 - **Open in the current window:**
   ```vim
-  :ChatVimNew
+  :ChatvimNew
   ```
   This will create a new markdown buffer and attach it to the current window
   without creating a split.
 
 - **Open in a left-side split:**
   ```vim
-  :ChatVimNew left
+  :ChatvimNew left
   ```
   This will create a new markdown buffer, open a vertical split on the far left,
   and attach the buffer to that new window.
@@ -1526,15 +1526,15 @@ Now you can use the command in two ways:
    argument by adding a `complete` function or list to the command definition.
    For example, to suggest `"left"` as the only valid argument:
    ```lua
-   vim.api.nvim_create_user_command('ChatVimNew', open_chatvim_window, {
+   vim.api.nvim_create_user_command('ChatvimNew', open_chatvim_window, {
      nargs = '?',
      complete = function()
        return { "left" }
      end,
-     desc = 'Open a new markdown buffer, optionally in a left-side split (ChatVimNew [left])',
+     desc = 'Open a new markdown buffer, optionally in a left-side split (ChatvimNew [left])',
    })
    ```
-   Now, when typing `:ChatVimNew` and pressing `<Tab>`, Neovim will suggest
+   Now, when typing `:ChatvimNew` and pressing `<Tab>`, Neovim will suggest
    `"left"`.
 
 ---
@@ -1559,11 +1559,11 @@ Now you can use the command in two ways:
 
 ### Summary
 
-- You can add optional arguments to your `ChatVimNew` command by setting
+- You can add optional arguments to your `ChatvimNew` command by setting
   `nargs = '?'` in `vim.api.nvim_create_user_command`.
 - The callback function receives the argument via `args.args`, which you can use
-  to decide whether to open the buffer in the current window (`ChatVimNew`) or
-  in a left-side split (`ChatVimNew left`).
+  to decide whether to open the buffer in the current window (`ChatvimNew`) or
+  in a left-side split (`ChatvimNew left`).
 - Additional options like autocompletion or error handling can be added to
   improve the user experience.
 
@@ -1788,7 +1788,7 @@ Putting it all together – command with argument
 ────────────────────────────────────────────────────────────────────────────
 
 ```lua
-vim.api.nvim_create_user_command('ChatVimNew', function(opts)
+vim.api.nvim_create_user_command('ChatvimNew', function(opts)
   local side = opts.fargs[1] or 'current'
   local buf, win = new_ui_window(side)
   -- seed the buffer with the last n messages from markdown history:
@@ -1799,7 +1799,7 @@ vim.api.nvim_create_user_command('ChatVimNew', function(opts)
 end, {
   nargs  = '?',
   complete = function() return {'left'} end,
-  desc   = 'chatvim ui: ChatVimNew [left]',
+  desc   = 'chatvim ui: ChatvimNew [left]',
 })
 ```
 
@@ -1975,7 +1975,7 @@ history is a normal file you wrote to disk, you can give the user a mapping or
 command:
 
 ```lua
-vim.api.nvim_create_user_command('ChatVimOpenFull', function()
+vim.api.nvim_create_user_command('ChatvimOpenFull', function()
   vim.cmd('edit ' .. history_path)
 end, { desc = 'open the raw chat history markdown' })
 ```
@@ -2001,15 +2001,282 @@ providing an immediate, lightweight chat window.
 
 # === USER ===
 
-currently, the `ChatVimStop` command stops the LLM from continuing in case the user has a reason to stop. it also has the keybindings `<leader>cvs`.
-
-here is the command function:
+this code has a problem. when i open a new scratch file, it works as expcted.
+however, i cannot save the file without changing the buftype back to something
+normal. how do i do that? i need to be able to open a new scratch chat, but then
+also save it if desired.
 
 ```lua
-vim.api.nvim_create_user_command("ChatvimStop", function()
-  require("chatvim").stop_completion()
-end, {})
+-- Function to open a new markdown buffer in a left-side split
+local function open_chatvim_window(args)
+  -- Create a new buffer (not listed, scratch buffer)
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Set buffer options using modern vim.bo interface
+  vim.bo[buf].buftype = "nofile" -- Not tied to a file
+  vim.bo[buf].bufhidden = "hide" -- Hide when not displayed
+  vim.bo[buf].swapfile = false -- No swap file
+  vim.bo[buf].filetype = "markdown" -- Set filetype to markdown
+
+  -- -- Optionally, give it a temporary name (purely for display purposes)
+  -- vim.api.nvim_buf_set_name(buf, 'temp.md')
+
+  -- Check if the argument is "left" to determine window placement
+  local placement = args.args or ""
+  local win
+
+  if placement == "left" then
+    -- Open a new vertical split at the far left of the Neovim instance
+    vim.cmd("topleft vertical split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "right" then
+    vim.cmd("botright vertical split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "top" then
+    vim.cmd("topleft split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "bottom" or placement == "bot" then
+    vim.cmd("botright split")
+    win = vim.api.nvim_get_current_win()
+  else
+    -- Use the current window
+    win = vim.api.nvim_get_current_win()
+  end
+
+  -- Attach the buffer to the new window
+  vim.api.nvim_win_set_buf(win, buf)
+
+  -- -- Optional: Set window width (e.g., 40 columns)
+  -- vim.api.nvim_win_set_width(win, 40)
+end
 ```
 
-i wonder, is there a way to combine this with the keybinding `ctrl+c`? that would be very useful, although that particular keybinding is already a standard keybinding that neovim handles specially.
+# === ASSISTANT ===
 
+Below, I'll explain the issue you're encountering and provide a complete,
+updated version of your code that addresses it. I'll also include explanations
+and additional features to make saving seamless while preserving the initial
+"scratch" (temporary/unsaved) behavior.
+
+### Understanding the Problem
+
+- **Why You Can't Save Initially**: By setting `vim.bo[buf].buftype = "nofile"`,
+  you're explicitly marking the buffer as a "scratch" buffer that's not tied to
+  a file on disk. This is great for temporary chats (it prevents accidental
+  saves and keeps things in-memory), but Neovim intentionally disables saving
+  for such buffers (e.g., `:w` will error with "E32: No file name").
+- **Solution Overview**: To enable saving, you need to:
+  1. Change `buftype` back to `""` (empty string), which makes it a normal
+     buffer that can be saved.
+  2. Assign a filename using `vim.api.nvim_buf_set_name(buf, filename)`.
+  3. Optionally, adjust other buffer options (e.g., enable swapfile if desired)
+     and write the file to disk.
+- **Approach**: We'll keep the buffer as 'nofile' initially (as in your code).
+  Then, we'll add a new user command (e.g., `:ChatvimSave`) that prompts for a
+  filename, converts the buffer to savable, and optionally saves it. This way,
+  the buffer starts as a temporary scratch chat but can be "promoted" to a
+  savable file when you choose.
+
+This fits well with your plugin's goals: chats are temporary by default, but
+users can save them explicitly (e.g., for long-term history).
+
+### Updated Code
+
+Here's the complete updated Lua code. I've integrated the saving functionality
+directly into your `open_chatvim_window` function by setting up buffer-local
+mappings and autocommands. I've also created a new `:ChatvimSave` command for
+explicit saving.
+
+```lua
+-- Function to open a new markdown buffer, optionally in a split
+local function open_chatvim_window(args)
+  -- Create a new buffer (not listed, scratch buffer)
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Set buffer options using modern vim.bo interface
+  vim.bo[buf].buftype = "nofile"    -- Not tied to a file (initially unsavable)
+  vim.bo[buf].bufhidden = "hide"    -- Hide when not displayed
+  vim.bo[buf].swapfile = false      -- No swap file (can be enabled later)
+  vim.bo[buf].filetype = "markdown" -- Set filetype to markdown
+
+  -- Check if the argument is "left" to determine window placement
+  local placement = args.args or ""
+  local win
+
+  if placement == "left" then
+    -- Open a new vertical split at the far left of the Neovim instance
+    vim.cmd("topleft vertical split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "right" then
+    vim.cmd("botright vertical split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "top" then
+    vim.cmd("topleft split")
+    win = vim.api.nvim_get_current_win()
+  elseif placement == "bottom" or placement == "bot" then
+    vim.cmd("botright split")
+    win = vim.api.nvim_get_current_win()
+  else
+    -- Use the current window
+    win = vim.api.nvim_get_current_win()
+  end
+
+  -- Attach the buffer to the target window
+  vim.api.nvim_win_set_buf(win, buf)
+
+  -- Optional: Set window width/height (e.g., 40 columns/rows) if opened in a split
+  if placement == "left" or placement == "right" then
+    vim.api.nvim_win_set_width(win, 40)
+  elseif placement == "top" or placement == "bottom" or placement == "bot" then
+    vim.api.nvim_win_set_height(win, 20)  -- Adjust as needed
+  end
+
+  -- Set up buffer-local keymap for saving (e.g., <Leader>s to trigger save)
+  vim.keymap.set('n', '<Leader>s', ':ChatvimSave<CR>', {
+    buffer = buf,
+    desc = 'Save Chatvim buffer as a file',
+  })
+end
+
+-- Function to convert the current buffer to savable and prompt for filename
+local function chatvim_save()
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- Check if the buffer is already savable (buftype == "")
+  if vim.bo[buf].buftype == "" then
+    vim.cmd('write')  -- Already savable; just save it
+    return
+  end
+
+  -- Prompt for a filename (defaults to 'chat.md' in current directory)
+  vim.ui.input({
+    prompt = 'Save chat as (e.g., chat.md): ',
+    default = vim.fn.getcwd() .. '/chat.md',
+  }, function(filename)
+    if not filename or filename == "" then
+      vim.api.nvim_echo({{'Save cancelled', 'WarningMsg'}}, false, {})
+      return
+    end
+
+    -- Convert to a normal savable buffer
+    vim.bo[buf].buftype = ""  -- Make it a normal buffer
+    vim.bo[buf].bufhidden = ""  -- Reset to default (optional)
+    vim.bo[buf].swapfile = true  -- Enable swapfile now that it's savable (optional)
+
+    -- Set the buffer name (ties it to the file)
+    vim.api.nvim_buf_set_name(buf, filename)
+
+    -- Save the file
+    vim.cmd('write')
+
+    -- Notify the user
+    vim.api.nvim_echo({{'Chat saved to ' .. filename, 'Normal'}}, false, {})
+  end)
+end
+
+-- Define the :ChatvimNew command with optional argument
+vim.api.nvim_create_user_command('ChatvimNew', open_chatvim_window, {
+  nargs = '?',  -- Accepts 0 or 1 argument
+  complete = function()
+    return { "left", "right", "top", "bottom" }  -- Suggestions for placements
+  end,
+  desc = 'Open a new markdown buffer, optionally in a split (e.g., ChatvimNew left)',
+})
+
+-- Define the :ChatvimSave command
+vim.api.nvim_create_user_command('ChatvimSave', chatvim_save, {
+  desc = 'Save the current Chatvim buffer as a file',
+})
+```
+
+### How This Works
+
+1. **Initial Scratch Buffer Setup**:
+   - Your code remains mostly unchanged: The buffer starts with
+     `buftype = "nofile"`, so it's temporary and unsavable (as desired for a new
+     chat).
+   - I've added optional height/width settings for horizontal splits
+     (top/bottom) to make it more flexible.
+
+2. **Enabling Saving with `:ChatvimSave`**:
+   - This new command (callable via `:ChatvimSave` or the buffer-local
+     `<Leader>s` mapping) checks if the buffer is already savable.
+   - If not, it prompts for a filename using `vim.ui.input` (a modern Neovim API
+     for user prompts; falls back to Vim's input if needed).
+   - It then:
+     - Resets `buftype` to `""` (making it savable).
+     - Optionally resets/enables other options like `bufhidden` and `swapfile`.
+     - Sets the buffer name to tie it to a file on disk.
+     - Saves the file with `:write`.
+   - If the buffer is already savable (e.g., after a previous save), it just
+     re-saves it without prompting.
+
+3. **Buffer-Local Keymap**:
+   - I've added a buffer-local `<Leader>s` mapping (e.g., `\s` if your leader is
+     `\`) that triggers `:ChatvimSave`. This is set up inside
+     `open_chatvim_window`, so it's only available in Chatvim buffers.
+   - You can customize the key (e.g., change to `<C-s>`) or remove it if you
+     prefer users to type `:ChatvimSave` manually.
+
+4. **Command Completion**:
+   - I've expanded the `complete` function for `:ChatvimNew` to suggest all your
+     placement options (left, right, top, bottom).
+
+### Usage
+
+- **Open a New Scratch Chat**:
+  ```
+  :ChatvimNew       " Opens in current window (unsavable initially)
+  :ChatvimNew left  " Opens in left split (unsavable initially)
+  ```
+
+- **Save the Chat**:
+  - While in the Chatvim buffer, type `:ChatvimSave` (or press `<Leader>s`).
+  - You'll be prompted for a filename (e.g., enter `~/chats/my_chat.md`).
+  - The buffer is converted to savable and written to disk.
+  - Subsequent saves (in the same buffer) will just overwrite the file without
+    prompting.
+
+- **After Saving**:
+  - The buffer is now a normal file buffer (you can use `:w` directly).
+  - If you close and reopen the file (e.g., `:e my_chat.md`), it's no longer a
+    scratch buffer—it's a regular markdown file.
+
+### Additional Notes and Customizations
+
+- **Preventing Accidental Saves Before Conversion**: Since `buftype = "nofile"`,
+  users can't save accidentally with `:w`. If you want to block `:w` explicitly
+  until converted, add this autocommand in `open_chatvim_window`:
+  ```lua
+  vim.api.nvim_create_autocmd('BufWriteCmd', {
+    buffer = buf,
+    callback = function()
+      if vim.bo[buf].buftype == "nofile" then
+        vim.api.nvim_echo({{'Use :ChatvimSave to save this scratch buffer', 'ErrorMsg'}}, false, {})
+        return
+      end
+      vim.cmd('write')  -- Proceed with save if already converted
+    end,
+  })
+  ```
+
+- **Integration with Your Plugin's History**: If your plugin already has a
+  history file (as discussed in previous responses), you could modify
+  `:ChatvimSave` to append to that instead of creating a new file.
+
+- **Error Handling**: The code handles cases like empty filenames or
+  cancellations gracefully. If the file already exists, Neovim will prompt to
+  overwrite (standard behavior).
+
+- **Neovim Version**: This assumes Neovim 0.7+ (for `vim.ui.input` and modern
+  APIs). If you're on an older version, replace `vim.ui.input` with
+  `vim.fn.input()`.
+
+- **Testing**: Test with long chats to ensure saving works. If you encounter
+  issues (e.g., with window splits), you can add
+  `vim.api.nvim_set_current_win(win)` after saving to refocus.
+
+If this doesn't fully meet your needs (e.g., you want auto-saving or more
+options), provide more details, and I can refine it further!
+
+# === USER ===
