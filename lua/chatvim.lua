@@ -398,7 +398,7 @@ local function open_chatvim_window(args)
 end
 
 -- Function to convert the current buffer to savable and prompt for filename
-local function chatvim_save()
+local function chatvim_write()
   local buf = vim.api.nvim_get_current_buf()
 
   -- Check if the buffer is already savable (buftype == "")
@@ -409,14 +409,14 @@ local function chatvim_save()
 
   -- Prompt for a filename using command-line input (defaults to 'chat.md' in current directory)
   local filename = vim.fn.input({
-    prompt = 'Save chat as (e.g., chat.md): ',
+    prompt = 'Write chat as (e.g., chat.md): ',
     default = vim.fn.getcwd() .. '/chat.md',
     completion = 'file',  -- Enable filename/path completion with <Tab>
   })
 
   -- Handle cancellation or empty input
   if not filename or filename == "" then
-    vim.api.nvim_echo({{'Save cancelled', 'WarningMsg'}}, false, {})
+    vim.api.nvim_echo({{'Write cancelled', 'WarningMsg'}}, false, {})
     return
   end
 
@@ -428,7 +428,7 @@ local function chatvim_save()
   -- Set the buffer name (ties it to the file)
   vim.api.nvim_buf_set_name(buf, filename)
 
-  -- Save the file
+  -- Write the file
   vim.cmd('write')
 
   -- Re-open the file to ensure it's properly tied to the buffer
@@ -468,9 +468,9 @@ vim.api.nvim_create_user_command("ChatvimStop", function()
   require("chatvim").stop_completion()
 end, {})
 
--- Define the :ChatvimSave command
-vim.api.nvim_create_user_command('ChatvimSave', chatvim_save, {
-  desc = 'Save the current Chatvim buffer as a file',
+-- Define the :ChatvimWrite command
+vim.api.nvim_create_user_command('ChatvimWrite', chatvim_write, {
+  desc = 'Write the current Chatvim buffer as a file',
 })
 
 return M
