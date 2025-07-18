@@ -170,4 +170,4 @@ Providers supported:
 
 MIT license. See [LICENSE](LICENSE).
 
-Copyright (C) 2025 Ryan X. Charles
+Copyright (C) 2025 EarthBucks Inc.
