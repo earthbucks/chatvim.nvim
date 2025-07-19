@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.5
         version: 2.2.5
       chatvim:
-        specifier: ^0.3.5
-        version: 0.3.5
+        specifier: ^0.3.6
+        version: 0.3.6
       yaml:
         specifier: ^2.8.0
         version: 2.8.0
@@ -144,8 +144,8 @@ packages:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
     engines: {node: '>=10'}
 
-  chatvim@0.3.5:
-    resolution: {integrity: sha512-5K7G0Qd5ZYQztQ+5j6pnY6riTv9cvlLZ380EW3Ji2Rg8IOYGYZwHY5hWR/b9x6Xw+bnHtn2iGeDtQmanEGY2iA==}
+  chatvim@0.3.6:
+    resolution: {integrity: sha512-Qt3eG5IE4ygSpAmUEMcl05JbwrWh8U8XRyUmjqymkh1Gu6rOges5vUARpYzn+8FvtRsMBtLWZYxYgmSoSgZWYw==}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
@@ -407,7 +407,7 @@ snapshots:
 
   char-regex@1.0.2: {}
 
-  chatvim@0.3.5:
+  chatvim@0.3.6:
     dependencies:
       '@anthropic-ai/sdk': 0.54.0
       '@iarna/toml': 2.2.5
