@@ -463,12 +463,10 @@ local function open_chatvim_help_window(args)
   -- Variable to collect stdout lines
   local output_lines = {}
 
-  -- Callback for stdout: collect lines (non-buffered for potential streaming, but we accumulate)
+  -- Callback for stdout: collect all lines, including blank ones
   local function on_stdout(_, data, _)
     for _, line in ipairs(data) do
-      if line ~= "" then -- Ignore empty lines from job output
-        table.insert(output_lines, line)
-      end
+      table.insert(output_lines, line) -- Include all lines, even empty ones for blank lines
     end
   end
 
