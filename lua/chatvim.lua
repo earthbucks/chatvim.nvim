@@ -386,36 +386,6 @@ local function open_chatvim_window(args)
   vim.bo.filetype = "markdown"
 end
 
--- Define a new command called 'ChatvimNew' with an optional argument
-vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
-  nargs = "?", -- Accepts 0 or 1 argument
-  desc = "Open a new markdown buffer, optionally in a left-side split (ChatvimNew [left])",
-})
-
-vim.api.nvim_create_user_command("ChatvimNewLeft", function()
-  open_chatvim_window({ args = "left" })
-end, { desc = "Open a new markdown buffer in a left-side split" })
-
-vim.api.nvim_create_user_command("ChatvimNewRight", function()
-  open_chatvim_window({ args = "right" })
-end, { desc = "Open a new markdown buffer in a right-side split" })
-
-vim.api.nvim_create_user_command("ChatvimNewTop", function()
-  open_chatvim_window({ args = "top" })
-end, { desc = "Open a new markdown buffer in a top split" })
-
-vim.api.nvim_create_user_command("ChatvimNewBottom", function()
-  open_chatvim_window({ args = "bottom" })
-end, { desc = "Open a new markdown buffer in a bottom split" })
-
-vim.api.nvim_create_user_command("ChatvimComplete", function()
-  require("chatvim").complete_text()
-end, {})
-
-vim.api.nvim_create_user_command("ChatvimStop", function()
-  require("chatvim").stop_completion()
-end, {})
-
 -- Function to open a new markdown buffer prefilled with help text from Node.js
 local function open_chatvim_help_window(args)
   -- Generate a unique filename like "/path/to/cwd/chat-YYYY-MM-DD-HH-MM-SS.md"
@@ -509,14 +479,63 @@ local function open_chatvim_help_window(args)
     vim.api.nvim_echo({ { "Failed to start Node.js job", "ErrorMsg" } }, false, {})
   end
 end
+-- Define a new command called 'ChatvimNew' with an optional argument
+vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
+  nargs = "?", -- Accepts 0 or 1 argument
+  desc = "Open a new markdown buffer in this window",
+})
 
--- Define the :ChatvimHelp command with optional argument
+vim.api.nvim_create_user_command("ChatvimNewLeft", function()
+  open_chatvim_window({ args = "left" })
+end, { desc = "Open a new markdown buffer in a left-side split" })
+
+vim.api.nvim_create_user_command("ChatvimNewRight", function()
+  open_chatvim_window({ args = "right" })
+end, { desc = "Open a new markdown buffer in a right-side split" })
+
+vim.api.nvim_create_user_command("ChatvimNewTop", function()
+  open_chatvim_window({ args = "top" })
+end, { desc = "Open a new markdown buffer in a top split" })
+
+vim.api.nvim_create_user_command("ChatvimNewBottom", function()
+  open_chatvim_window({ args = "bottom" })
+end, { desc = "Open a new markdown buffer in a bottom split" })
+
+vim.api.nvim_create_user_command("ChatvimComplete", function()
+  require("chatvim").complete_text()
+end, {})
+
+vim.api.nvim_create_user_command("ChatvimStop", function()
+  require("chatvim").stop_completion()
+end, {})
+
 vim.api.nvim_create_user_command("ChatvimHelp", open_chatvim_help_window, {
-  nargs = "?", -- Accepts 0 or 1 argument (e.g., "left")
-  complete = function()
-    return { "left", "right", "top", "bottom" } -- Suggestions for placements
-  end,
-  desc = "Open a new markdown buffer prefilled with help text, optionally in a split (e.g., ChatvimHelp left)",
+  nargs = "?", -- Accepts 0 or 1 argument
+  desc = "Open a new markdown buffer with help text in this window",
+})
+
+vim.api.nvim_create_user_command("ChatvimHelpLeft", function()
+  open_chatvim_help_window({ args = "left" })
+end, {
+  desc = "Open a new markdown buffer with help text in a left-side split",
+})
+
+vim.api.nvim_create_user_command("ChatvimHelpRight", function()
+  open_chatvim_help_window({ args = "right" })
+end, {
+  desc = "Open a new markdown buffer with help text in a right-side split",
+})
+
+vim.api.nvim_create_user_command("ChatvimHelpTop", function()
+  open_chatvim_help_window({ args = "top" })
+end, {
+  desc = "Open a new markdown buffer with help text in a top split",
+})
+
+vim.api.nvim_create_user_command("ChatvimHelpBottom", function()
+  open_chatvim_help_window({ args = "bottom" })
+end, {
+  desc = "Open a new markdown buffer with help text in a bottom split",
 })
 
 -- Chatvim (chatvim.nvim) keybindings
