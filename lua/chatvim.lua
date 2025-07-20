@@ -393,47 +393,6 @@ local function open_chatvim_window(args)
   -- end
 end
 
--- Function to convert the current buffer to savable and prompt for filename
-local function chatvim_write()
-  local buf = vim.api.nvim_get_current_buf()
-
-  -- Check if the buffer is already savable (buftype == "")
-  if vim.bo[buf].buftype == "" then
-    vim.cmd("write") -- Already savable; just save it
-    return
-  end
-
-  -- Prompt for a filename using command-line input (defaults to 'chat.md' in current directory)
-  local filename = vim.fn.input({
-    prompt = "Write chat as (e.g., chat.md): ",
-    default = vim.fn.getcwd() .. "/chat.md",
-    completion = "file", -- Enable filename/path completion with <Tab>
-  })
-
-  -- Handle cancellation or empty input
-  if not filename or filename == "" then
-    vim.api.nvim_echo({ { "Write cancelled", "WarningMsg" } }, false, {})
-    return
-  end
-
-  -- Convert to a normal savable buffer
-  vim.bo[buf].buftype = "" -- Make it a normal buffer
-  vim.bo[buf].bufhidden = "" -- Reset to default (optional)
-  vim.bo[buf].swapfile = true -- Enable swapfile now that it's savable (optional)
-
-  -- Set the buffer name (ties it to the file)
-  vim.api.nvim_buf_set_name(buf, filename)
-
-  -- Write the file
-  vim.cmd("write")
-
-  -- Re-open the file to ensure it's properly tied to the buffer
-  vim.cmd("edit " .. filename)
-
-  -- Notify the user
-  vim.api.nvim_echo({ { "Chat saved to " .. filename, "Normal" } }, false, {})
-end
-
 -- Define a new command called 'ChatvimNew' with an optional argument
 vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
   nargs = "?", -- Accepts 0 or 1 argument
@@ -463,11 +422,6 @@ end, {})
 vim.api.nvim_create_user_command("ChatvimStop", function()
   require("chatvim").stop_completion()
 end, {})
-
--- Define the :ChatvimWrite command
-vim.api.nvim_create_user_command("ChatvimWrite", chatvim_write, {
-  desc = "Write the current Chatvim buffer as a file",
-})
 
 -- Chatvim (chatvim.nvim) keybindings
 -- local opts = { noremap = true, silent = true }
