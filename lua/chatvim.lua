@@ -355,46 +355,42 @@ function M.stop_completion()
 end
 
 -- Function to open a new markdown buffer in a left-side split
+
 local function open_chatvim_window(args)
-  -- Create a new buffer (not listed, scratch buffer)
-  local buf = vim.api.nvim_create_buf(false, true)
+  -- Generate a unique filename like "/path/to/cwd/chat-YYYY-MM-DD-HH-MM-SS.md"
+  local filename = vim.fn.getcwd() .. "/chat-" .. os.date("%Y-%m-%d-%H-%M-%S") .. ".md"
 
-  -- Set buffer options using modern vim.bo interface
-  vim.bo[buf].buftype = "nofile" -- Not tied to a file
-  vim.bo[buf].bufhidden = "hide" -- Hide when not displayed
-  vim.bo[buf].swapfile = false -- No swap file
-  vim.bo[buf].filetype = "markdown" -- Set filetype to markdown
-
-  -- -- Optionally, give it a temporary name (purely for display purposes)
-  -- vim.api.nvim_buf_set_name(buf, 'temp.md')
-
-  -- Check if the argument is "left" to determine window placement
+  -- Determine window placement based on argument
   local placement = args.args or ""
-  local win
+  local split_cmd = ""
 
   if placement == "left" then
-    -- Open a new vertical split at the far left of the Neovim instance
-    vim.cmd("topleft vertical split")
-    win = vim.api.nvim_get_current_win()
+    split_cmd = "topleft vsplit"
   elseif placement == "right" then
-    vim.cmd("botright vertical split")
-    win = vim.api.nvim_get_current_win()
+    split_cmd = "botright vsplit"
   elseif placement == "top" then
-    vim.cmd("topleft split")
-    win = vim.api.nvim_get_current_win()
+    split_cmd = "topleft split"
   elseif placement == "bottom" or placement == "bot" then
-    vim.cmd("botright split")
-    win = vim.api.nvim_get_current_win()
-  else
-    -- Use the current window
-    win = vim.api.nvim_get_current_win()
+    split_cmd = "botright split"
   end
 
-  -- Attach the buffer to the new window
-  vim.api.nvim_win_set_buf(win, buf)
+  -- Open the split if specified
+  if split_cmd ~= "" then
+    vim.cmd(split_cmd)
+  end
 
-  -- -- Optional: Set window width (e.g., 40 columns)
-  -- vim.api.nvim_win_set_width(win, 40)
+  -- Edit the new file in the target window (creates a new unsaved buffer with the filename)
+  vim.cmd("edit " .. vim.fn.fnameescape(filename))
+
+  -- Optional: Ensure filetype is markdown (usually auto-detected, but explicit for safety)
+  vim.bo.filetype = "markdown"
+
+  -- Optional: Set window size if in a split (adjust as needed)
+  -- if placement == "left" or placement == "right" then
+  --   vim.api.nvim_win_set_width(0, 40) -- Current window (0) width to 40 columns
+  -- elseif placement == "top" or placement == "bottom" or placement == "bot" then
+  --   vim.api.nvim_win_set_height(0, 20) -- Current window height to 20 rows
+  -- end
 end
 
 -- Function to convert the current buffer to savable and prompt for filename
