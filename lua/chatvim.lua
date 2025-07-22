@@ -416,13 +416,6 @@ local function open_chatvim_help_window(args)
   -- Optional: Ensure filetype is markdown (usually auto-detected, but explicit for safety)
   vim.bo.filetype = "markdown"
 
-  -- Optional: Set window size if in a split (adjust as needed)
-  if placement == "left" or placement == "right" then
-    vim.api.nvim_win_set_width(0, 40) -- Current window (0) width to 40 columns
-  elseif placement == "top" or placement == "bottom" or placement == "bot" then
-    vim.api.nvim_win_set_height(0, 20) -- Current window height to 20 rows
-  end
-
   -- Get the current buffer (newly created)
   local buf = vim.api.nvim_get_current_buf()
 
