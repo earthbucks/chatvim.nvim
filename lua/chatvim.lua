@@ -425,12 +425,12 @@ local function open_chatvim_help_window(args)
 
   -- Read the contents of help.md
   local output_lines = vim.fn.readfile(help_path)
+  -- add two lines at the end of the output
+  table.insert(output_lines, "")
+  table.insert(output_lines, "")
 
   -- Insert the contents into the buffer
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines)
-  -- Append two blank lines to the output
-  table.insert(output_lines, "")
-  table.insert(output_lines, "")
 
   -- Move cursor to the end of the content
   local last_line = #output_lines
