@@ -426,59 +426,24 @@ local function open_chatvim_help_window(args)
   -- Get the current buffer (newly created)
   local buf = vim.api.nvim_get_current_buf()
 
-  -- Define path to the Node.js script
+  -- Define path to the help.md file (in the same directory as this Lua file)
   local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
-  local stream_js_path = plugin_dir .. "../chatvim.ts"
+  local help_path = plugin_dir .. "help.md"
 
-  -- Variable to collect stdout lines
-  local output_lines = {}
+  -- Read the contents of help.md
+  local output_lines = vim.fn.readfile(help_path)
 
-  -- Callback for stdout: collect all lines, including blank ones
-  local function on_stdout(_, data, _)
-    for _, line in ipairs(data) do
-      table.insert(output_lines, line) -- Include all lines, even empty ones for blank lines
-    end
-  end
+  -- Insert the contents into the buffer
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines)
 
-  -- Callback for stderr: log errors (optional, can be expanded)
-  local function on_stderr(_, data, _)
-    if #data > 0 and data[1] ~= "" then
-      vim.api.nvim_echo({ { "Error from Node.js: " .. table.concat(data, "\n"), "ErrorMsg" } }, false, {})
-    end
-  end
+  -- Move cursor to the end of the content
+  local last_line = #output_lines
+  vim.api.nvim_win_set_cursor(0, { last_line, 0 })
 
-  -- Callback for exit: insert collected output into buffer and center cursor
-  local function on_exit(_, code, _)
-    if code ~= 0 then
-      vim.api.nvim_echo({ { "Node.js command failed with code " .. code, "ErrorMsg" } }, false, {})
-      return
-    end
-
-    -- Insert the collected output lines into the buffer
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines)
-
-    -- Move cursor to the end of the content
-    local last_line = #output_lines
-    vim.api.nvim_win_set_cursor(0, { last_line, 0 })
-
-    -- Center the cursor at the bottom (equivalent to 'zz')
-    vim.cmd("normal! zz")
-  end
-
-  -- Start the Node.js job to get help text
-  local job_id = vim.fn.jobstart({ "node", stream_js_path, "helpfile" }, {
-    on_stdout = on_stdout,
-    on_stderr = on_stderr,
-    on_exit = on_exit,
-    stdout_buffered = false, -- Non-buffered in case output is large/streamed
-    stderr_buffered = false,
-  })
-
-  -- Optional: Handle job failure
-  if job_id <= 0 then
-    vim.api.nvim_echo({ { "Failed to start Node.js job", "ErrorMsg" } }, false, {})
-  end
+  -- Center the cursor at the bottom (equivalent to 'zz')
+  vim.cmd("normal! zz")
 end
+
 -- Define a new command called 'ChatvimNew' with an optional argument
 vim.api.nvim_create_user_command("ChatvimNew", open_chatvim_window, {
   nargs = "?", -- Accepts 0 or 1 argument
