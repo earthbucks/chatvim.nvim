@@ -3926,3 +3926,7 @@ end
 ```
 
 # === USER ===
+
+that worked. now, i want to do one more thing. i want to add two newlines to the
+end of the file. how do i do that? please show me only the lua code that adds
+the two lines, and do not show me the entire function again.
