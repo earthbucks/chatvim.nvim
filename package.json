@@ -26,9 +26,9 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "chatvim": "^0.3.9",
-    "yaml": "^2.8.0",
-    "zod": "^3.25.67"
+    "@iarna/toml": "2.2.5",
+    "chatvim": "0.3.9",
+    "yaml": "2.8.0",
+    "zod": "3.25.67"
   }
 }
